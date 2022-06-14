@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Typography } from "@mui/material";
+import { EncodeTextContext } from "./EncodeTextContext";
 import "./EncodeText.css";
 
 function EncodeText(props) {
-  const [encodeText, setEncodeText] = useState([]);
+  const { updateEncodeText } = useContext(EncodeTextContext);
 
   function enterText(e) {
     const newText = e.target.value;
-    setEncodeText(newText.split(""));
+    updateEncodeText(newText.split(""));
   }
 
   return (
@@ -18,7 +19,7 @@ function EncodeText(props) {
           color: "rgba(0, 0, 0, 0.6)",
         }}
       >
-        Encode Text: {encodeText}
+        Encode Text:
       </Typography>
       <textarea
         id="encode-text"

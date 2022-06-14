@@ -11,25 +11,26 @@ import Encoding from "./Encoding";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: "10px",
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
 
 function App() {
   return (
-    <Grid container direction="row" spacing={4} wrap="wrap">
+    <Grid container direction="row" spacing={3} wrap="wrap">
       <Grid item xs={12}>
         <Typography id="app-title" variant="h4" component="h4">
-          Huffman Code
+          Huffman Code Visualizer
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item xs={4}>
         <Stack
           direction="column"
-          spacing={3}
+          spacing={2}
           sx={{
-            margin: "10px",
+            margin: "7px",
+            height: "100%",
           }}
         >
           <Item>
@@ -43,9 +44,16 @@ function App() {
           </Item>
         </Stack>
       </Grid>
-      <Grid item>
-        <Stack direction="column" spacing={3}>
-          <Item>Item 1</Item>
+      <Grid item xs={8}>
+        <Stack
+          direction="column"
+          spacing={3}
+          sx={{
+            margin: "10px",
+            height: "100%",
+          }}
+        >
+          <Item id="item1">Item 1</Item>
         </Stack>
       </Grid>
     </Grid>

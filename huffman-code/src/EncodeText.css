@@ -11,7 +11,8 @@
 #encode-text {
   resize: none;
   height: 20vh;
-  width: 50vw;
+  width: 100%;
+  padding: 2px;
   font-family: "Roboto", sans-serif;
 }
 

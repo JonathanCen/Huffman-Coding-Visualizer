@@ -1,52 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Typography } from "@mui/material";
+import { EncodeTextContext } from "./EncodeTextContext";
 import "./Encoding.css";
 
 function Encoding(props) {
-  const [asciiCoding, setasciiCoding] = useState([
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-    "ASCII coding will populate when you enter text in encode text!",
-    "asdf",
-    "asdf",
-    "f",
-    "fd",
-    "asdf",
-  ]);
+  const { encodeText } = useContext(EncodeTextContext);
+
+  useEffect(() => {
+    console.log(`Encoding ${props.encodingName}: ${encodeText}`);
+  }, [encodeText, props.encodingName]);
 
   return (
     <div>
@@ -58,10 +20,16 @@ function Encoding(props) {
       >
         {props.encodingName}:
       </Typography>
-      <div id="encoding-div">
-        {asciiCoding.map((char, index) => {
+      <div
+        disabled
+        id="encoding-div"
+        contentEditable="true"
+        suppressContentEditableWarning={true}
+      >
+        {encodeText.map((char, index) => {
           return <span key={index}>{char}</span>;
         })}
+        {/* {encodeText} */}
       </div>
     </div>
   );
