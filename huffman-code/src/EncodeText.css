@@ -1,0 +1,21 @@
+/* #encode-text {
+  -webkit-appearance: textarea;
+  border: 1px solid gray;
+  overflow: auto;
+  text-align: left;
+  height: 30vh;
+  width: 50vw;
+  padding: 2px;
+} */
+
+#encode-text {
+  resize: none;
+  height: 20vh;
+  width: 50vw;
+  font-family: "Roboto", sans-serif;
+}
+
+#encode-text::placeholder {
+  font-family: "Roboto", sans-serif;
+  font-size: 0.875rem;
+}
