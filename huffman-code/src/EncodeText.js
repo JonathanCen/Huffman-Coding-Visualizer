@@ -3,22 +3,17 @@ import { Typography } from "@mui/material";
 import { EncodeTextContext } from "./EncodeTextContext";
 import "./EncodeText.css";
 
-function EncodeText(props) {
-  const { encodeText, updateEncodeText } = useContext(EncodeTextContext);
+function EncodeText() {
+  const { text, setText } = useContext(EncodeTextContext);
 
   // useEffect(() => {
   //   document.addEventListener("keydown", onKeyPressed);
   // }, []);
 
   function enterText(e) {
-    const newText = e.target.value;
-    const encodeText = newText.split("").map((char) => char.charCodeAt(0));
-    updateEncodeText(encodeText);
+    const newText = e.target.value.split("");
+    setText(newText);
   }
-
-  // function onKeyPressed(e) {
-  //   console.log(e);
-  // }
 
   return (
     <React.Fragment>
@@ -28,7 +23,7 @@ function EncodeText(props) {
           color: "rgba(0, 0, 0, 0.6)",
         }}
       >
-        Encode Text: &nbsp; &nbsp;&nbsp; (Character count: {encodeText.length})
+        Encode Text: &nbsp; &nbsp;&nbsp; (Character count: {text.length})
       </Typography>
       <textarea
         id="encode-text"
