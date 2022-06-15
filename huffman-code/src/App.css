@@ -1,8 +1,34 @@
 #app-title {
-  padding-left: 25px;
-  padding-top: 25px;
+  padding-left: 20px;
+  padding-top: 20px;
 }
 
 #item1 {
-  width: 96%;
+  width: 95%;
+}
+
+#contact-info {
+  width: 500px;
+  margin: 0 auto;
+  padding-top: 60px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#github-link,
+#personal-page-link,
+#app-title-anchor {
+  color: inherit;
+  text-decoration: none;
+}
+
+#personal-page-link,
+#github-link {
+  font-size: 12px;
+}
+
+#sudoku-grid {
+  border-collapse: collapse;
+  border: 3px solid var(--sudoku_color);
+  background-color: var(--sudoku_color);
 }

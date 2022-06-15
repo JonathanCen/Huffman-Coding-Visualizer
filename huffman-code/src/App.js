@@ -1,36 +1,38 @@
 import React from "react";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
-import "./App.css";
-import Grid from "@mui/material/Grid";
-import { Typography } from "@mui/material";
+import { Stack, Typography, Grid } from "@mui/material";
+import GitHubIcon from "@mui/icons-material/GitHub";
+
 import EncodeText from "./EncodeText";
 import Encoding from "./Encoding";
+import "./App.css";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: "10px",
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+import HuffmanCodeTree from "./HuffmanCodeTree";
+import Item from "./Item";
 
 function App() {
   return (
-    <Grid container direction="row" spacing={3} wrap="wrap">
+    <Grid
+      container
+      direction="row"
+      spacing={3}
+      wrap="wrap"
+      sx={{
+        padding: "5px",
+      }}
+    >
       <Grid item xs={12}>
         <Typography id="app-title" variant="h4" component="h4">
-          Huffman Code Visualizer
+          <a id="app-title-anchor" href="http://localhost:3000/">
+            Huffman Code Visualizer
+          </a>
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={5}>
         <Stack
           direction="column"
           spacing={2}
           sx={{
             margin: "7px",
-            height: "100%",
           }}
         >
           <Item>
@@ -44,16 +46,27 @@ function App() {
           </Item>
         </Stack>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={7}>
+        <Item rightPadding="10px" id="huffman-code-tree" height="100%">
+          <HuffmanCodeTree />
+        </Item>
+      </Grid>
+      <Grid item xs={12}>
         <Stack
-          direction="column"
-          spacing={3}
-          sx={{
-            margin: "10px",
-            height: "100%",
-          }}
+          direction="row"
+          justifyContent="space-evenly"
+          alignItems="center"
         >
-          <Item id="item1">Item 1</Item>
+          <Typography variant="subtitle1">
+            <a id="github-link" href="https://github.com/">
+              Source Code <GitHubIcon fontSize="small" />
+            </a>
+          </Typography>
+          <Typography variant="overline">
+            <a id="personal-page-link" href="https://google.com/">
+              Jonathan Cen
+            </a>
+          </Typography>
         </Stack>
       </Grid>
     </Grid>
