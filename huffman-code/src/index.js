@@ -4,13 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { EncodeTextProvider } from "./EncodeTextContext";
+import { HuffmanCodeVariationProvider } from "./HuffmanCodeVariationContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <EncodeTextProvider>
-      <App />
-    </EncodeTextProvider>
+    <HuffmanCodeVariationProvider>
+      <EncodeTextProvider>
+        <App />
+      </EncodeTextProvider>
+    </HuffmanCodeVariationProvider>
   </React.StrictMode>
 );
 

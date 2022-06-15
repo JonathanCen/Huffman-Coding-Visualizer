@@ -12,6 +12,10 @@ function Encoding(props) {
   //   console.log(`Encoding ${props.encodingName}: ${encodeText}`);
   // }, [encodeText, props.encodingName]);
 
+  const metaInfo = `(Total bits: ${
+    props.encodingName === "ASCII Coding" ? encodeText.length * 8 : 0
+  })`;
+
   return (
     <div>
       <Typography
@@ -20,7 +24,7 @@ function Encoding(props) {
           color: "rgba(0, 0, 0, 0.6)",
         }}
       >
-        {props.encodingName}:
+        {props.encodingName}: &nbsp; {metaInfo}
       </Typography>
       <div disabled id="encoding-div">
         {encodeText.map((charEncodingCode, index) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Stack, Typography, Grid } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
@@ -9,7 +9,11 @@ import "./App.css";
 import HuffmanCodeTree from "./HuffmanCodeTree";
 import Item from "./Item";
 
+import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
+
 function App() {
+  const { huffmanVariation } = useContext(HuffmanCodeVariationContext);
+
   return (
     <Grid
       container
@@ -42,7 +46,7 @@ function App() {
             <Encoding encodingName="ASCII Coding" />
           </Item>
           <Item>
-            <Encoding encodingName="Huffman Coding" />
+            <Encoding encodingName={huffmanVariation} />
           </Item>
         </Stack>
       </Grid>

@@ -1,6 +1,7 @@
 import React from "react";
 import { ButtonGroup, Button, Stack } from "@mui/material";
 import "./HuffmanCodeTree.css";
+import HuffmanCodeTreeButtons from "./HuffmanCodeTreeButtons";
 
 function HuffmanCodeTree(props) {
   return (
@@ -11,7 +12,7 @@ function HuffmanCodeTree(props) {
         height: "100%",
       }}
     >
-      <ButtonGroup
+      {/* <ButtonGroup
         variant="outlined"
         // color="secondary"
         aria-label="outlined primary button group"
@@ -33,7 +34,8 @@ function HuffmanCodeTree(props) {
         >
           Adaptive Huffman Coding
         </Button>
-      </ButtonGroup>
+      </ButtonGroup> */}
+      <HuffmanCodeTreeButtons />
       <svg id="huffman-code-tree"></svg>
     </Stack>
   );
