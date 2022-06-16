@@ -3,7 +3,8 @@ import { Stack, Typography, Grid } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
 import EncodeText from "./EncodeText";
-import Encoding from "./Encoding";
+import ASCIICoding from "./ASCIICoding";
+import HuffmanCoding from "./HuffmanCoding";
 import "./App.css";
 
 import HuffmanCodeTree from "./HuffmanCodeTree";
@@ -43,10 +44,10 @@ function App() {
             <EncodeText />
           </Item>
           <Item>
-            <Encoding encodingName="ASCII Coding" />
+            <ASCIICoding codingName="ASCII Coding" />
           </Item>
           <Item>
-            <Encoding encodingName={huffmanVariation} />
+            <HuffmanCoding codingName={huffmanVariation} />
           </Item>
         </Stack>
       </Grid>

@@ -7,8 +7,8 @@ function HuffmanCodeTreeButtons(props) {
     HuffmanCodeVariationContext
   );
 
-  const toggleButtons = (e, newVariation) => {
-    setHuffmanVariation(newVariation);
+  const toggleButtons = (e) => {
+    setHuffmanVariation(e.target.value);
   };
 
   return (
