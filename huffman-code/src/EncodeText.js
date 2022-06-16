@@ -28,7 +28,7 @@ function EncodeText(props) {
           color: "rgba(0, 0, 0, 0.6)",
         }}
       >
-        Encode Text: &nbsp; &nbsp;&nbsp; (Character count: {encodeText.length})
+        Encode Text: &nbsp; (Character count: {encodeText.length})
       </Typography>
       <textarea
         id="encode-text"
