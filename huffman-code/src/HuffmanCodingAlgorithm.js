@@ -1,7 +1,62 @@
-// Regular huffman coding - assumes we get the entire document every time
-const huffman_coding = () => {};
+class HuffmanBinaryTreeNode {
+  constructor(
+    frequency,
+    character = null,
+    leftChild = null,
+    rightChild = null
+  ) {
+    this.character = character;
+    this.frequency = frequency;
+    this.left = leftChild;
+    this.right = rightChild;
+  }
+}
 
-// Adaptive huffman coding - reading each character one at a time and altering the tree structure with it
-const adaptive_huffman_coding = () => {};
+class HuffmanBinaryTree {
+  constructor(inputText, huffmanVariation) {
+    this.variation = huffmanVariation;
+    this.inputText = inputText;
+    this.root =
+      huffmanVariation === "Huffman Coding"
+        ? this.buildHuffmanTree()
+        : this.buildAdaptiveHuffmanTree();
+  }
 
-export { huffman_coding, adaptive_huffman_coding };
+  constructFrequencyObject() {
+    return this.inputText.reduce(
+      (currentObject, character) => (
+        (currentObject[character] = currentObject.hasOwnProperty(character)
+          ? currentObject[character] + 1
+          : 1),
+        currentObject
+      ),
+      {}
+    );
+  }
+
+  /*
+   * Returns the root of the Huffman tree
+   */
+  buildHuffmanTree() {
+    // Create a dictionary storing the frequency of the inputText
+    const inputTextFrequencyObject = this.constructFrequencyObject();
+
+    // Build individual tree nodes for each unique character
+    const nodes = [];
+    for (const [character, frequency] of Object.entries(
+      inputTextFrequencyObject
+    )) {
+      nodes.push(new HuffmanBinaryTreeNode(character, frequency));
+    }
+
+    // Construct a min heap storing the frequency of each character
+
+    // Keep on popping off the top two elements and merging them until there is only one node left in the min heap
+
+    // Return the only node
+  }
+
+  buildAdaptiveHuffmanTree() {}
+}
+
+export default HuffmanBinaryTree;

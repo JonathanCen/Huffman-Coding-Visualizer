@@ -3,7 +3,7 @@ import { Stack, Typography, Grid } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
 import EncodeText from "./EncodeText";
-import ASCIICoding from "./ASCIICoding";
+import BinaryCode from "./BinaryCode";
 import HuffmanCoding from "./HuffmanCoding";
 import "./App.css";
 
@@ -44,7 +44,7 @@ function App() {
             <EncodeText />
           </Item>
           <Item>
-            <ASCIICoding codingName="ASCII Coding" />
+            <BinaryCode codingName="Binary Coding" />
           </Item>
           <Item>
             <HuffmanCoding codingName={huffmanVariation} />

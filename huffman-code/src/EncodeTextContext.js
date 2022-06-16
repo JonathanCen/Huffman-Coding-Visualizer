@@ -1,9 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
-import {
-  huffman_coding,
-  adaptive_huffman_coding,
-} from "./HuffmanCodingAlgorithm";
+import HuffmanBinaryTree from "./HuffmanCodingAlgorithm";
 
 const EncodeTextContext = createContext();
 
@@ -11,34 +8,28 @@ const EncodeTextProvider = ({ children }) => {
   const { huffmanVariation } = useContext(HuffmanCodeVariationContext);
 
   const [text, setText] = useState([]);
-  const [asciiCoding, setASCIICoding] = useState([]);
+  const [binaryCode, setBinaryCode] = useState([]);
   const [huffmanCoding, setHuffmanCoding] = useState([]);
 
   useEffect(() => {
-    console.log("Context");
     // Set the ascii code for every char in the text
-    setASCIICoding(text.map((char) => char.charCodeAt(0)));
+    setBinaryCode(text.map((char) => char.charCodeAt(0).toString(2)));
   }, [text]);
 
   useEffect(() => {
-    console.log("Buidling Huffman Tree");
-
-    if (asciiCoding.length !== 0) {
+    if (text.length !== 0) {
       // Construct the huffman tree
-      const huffmanTree =
-        huffmanVariation === "Huffman Coding"
-          ? huffman_coding(asciiCoding)
-          : adaptive_huffman_coding(asciiCoding);
+      const huffmanTree = new HuffmanBinaryTree(text, huffmanVariation);
       // Set the huffman coding
     }
-  }, [asciiCoding, huffmanVariation]);
+  }, [text, huffmanVariation]);
 
   return (
     <EncodeTextContext.Provider
       value={{
         text,
         setText,
-        asciiCoding,
+        binaryCode,
         huffmanCoding,
       }}
     >

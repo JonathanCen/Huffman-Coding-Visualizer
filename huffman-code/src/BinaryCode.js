@@ -4,14 +4,14 @@ import { EncodeTextContext } from "./EncodeTextContext";
 import { mouseEnter, mouseLeave } from "./CodingMouseEvents";
 import "./Coding.css";
 
-function ASCIICoding(props) {
-  const { asciiCoding } = useContext(EncodeTextContext);
+function BinaryCode(props) {
+  const { binaryCode } = useContext(EncodeTextContext);
 
   useEffect(() => {
-    console.log(`Encoding ASCII Coding: ${asciiCoding}`);
-  }, [asciiCoding]);
+    console.log(`Encoding ASCII Coding: ${binaryCode}`);
+  }, [binaryCode]);
 
-  const metaInfo = `(Total bits: ${asciiCoding.length * 8})`;
+  const metaInfo = `(Total bits: ${binaryCode.length * 8})`;
 
   return (
     <div>
@@ -24,7 +24,7 @@ function ASCIICoding(props) {
         {props.codingName}: &nbsp; {metaInfo}
       </Typography>
       <div disabled className="coding-div">
-        {asciiCoding.map((charCode, index) => {
+        {binaryCode.map((charCode, index) => {
           return (
             <span
               className={"coding-span"}
@@ -41,4 +41,4 @@ function ASCIICoding(props) {
     </div>
   );
 }
-export default ASCIICoding;
+export default BinaryCode;
