@@ -1,6 +1,9 @@
+/*
+ * Creates a min heap
+ */
 class PriorityQueue {
   constructor(array) {
-    this.array;
+    this.minHeap;
   }
 }
 

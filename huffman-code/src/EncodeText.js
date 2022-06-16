@@ -23,7 +23,7 @@ function EncodeText() {
           color: "rgba(0, 0, 0, 0.6)",
         }}
       >
-        Encode Text: &nbsp; &nbsp;&nbsp; (Character count: {text.length})
+        Encode Text: &nbsp; (Character count: {text.length})
       </Typography>
       <textarea
         id="encode-text"
