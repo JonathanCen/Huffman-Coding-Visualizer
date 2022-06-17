@@ -11,6 +11,13 @@ class HuffmanBinaryTreeNode {
     this.frequency = frequency;
     this.left = leftChild;
     this.right = rightChild;
+    this.nodeNumber = HuffmanBinaryTreeNode.getNodeNumber();
+  }
+
+  static creationCounter = 0;
+
+  static getNodeNumber() {
+    return this.creationCounter++;
   }
 
   getFrequency() {
@@ -19,6 +26,10 @@ class HuffmanBinaryTreeNode {
 
   getCharacter() {
     return this.character;
+  }
+
+  getNodeNumber() {
+    return this.nodeNumber;
   }
 }
 
@@ -78,7 +89,6 @@ class HuffmanBinaryTree {
     )) {
       nodes.push(new HuffmanBinaryTreeNode(frequency, character));
     }
-
     // Construct a min heap storing the frequency of each character
     const minHeap = new MinHeap(nodes);
     minHeap.heapify();
@@ -94,9 +104,6 @@ class HuffmanBinaryTree {
     //   console.log("\n");
     //   currentMin = headNode;
     // }
-    for (let node of minHeap.heap) {
-      console.log(node);
-    }
 
     // Keep on popping off the top two elements and merging them until there is only one node left in the min heap
     while (minHeap.length > 1) {
