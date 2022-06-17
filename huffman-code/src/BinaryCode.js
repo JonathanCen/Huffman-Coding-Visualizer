@@ -8,7 +8,7 @@ function BinaryCode(props) {
   const { binaryCode } = useContext(EncodeTextContext);
 
   useEffect(() => {
-    console.log(`Encoding ASCII Coding: ${binaryCode}`);
+    // console.log(`Encoding ASCII Coding: ${binaryCode}`);
   }, [binaryCode]);
 
   const metaInfo = `(Total bits: ${binaryCode.length * 8})`;

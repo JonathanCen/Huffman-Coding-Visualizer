@@ -20,6 +20,7 @@ const EncodeTextProvider = ({ children }) => {
     if (text.length !== 0) {
       // Construct the huffman tree
       const huffmanTree = new HuffmanBinaryTree(text, huffmanVariation);
+      huffmanTree.printTree();
       // Set the huffman coding
     }
   }, [text, huffmanVariation]);

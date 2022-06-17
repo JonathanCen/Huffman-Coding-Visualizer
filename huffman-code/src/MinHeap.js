@@ -4,7 +4,7 @@
 class MinHeap {
   constructor(array) {
     this.heap = array;
-    this.heapify();
+    this.length = array.length;
   }
 
   /*
@@ -25,9 +25,19 @@ class MinHeap {
   }
 
   swap(firstNodeIndex, secondNodeIndex) {
+    // console.log(
+    //   "before:",
+    //   this.heap[firstNodeIndex],
+    //   this.heap[secondNodeIndex]
+    // );
     const tmpNode = this.heap[firstNodeIndex];
     this.heap[firstNodeIndex] = this.heap[secondNodeIndex];
     this.heap[secondNodeIndex] = tmpNode;
+    // console.log(
+    //   "after:",
+    //   this.heap[firstNodeIndex],
+    //   this.heap[secondNodeIndex]
+    // );
   }
 
   getNodeValue(index) {
@@ -38,18 +48,30 @@ class MinHeap {
    * Sift Down: iteratively sifts down on an element (index)
    */
   siftDown(index) {
-    const leftChildIndex = this.computeLeftChildIndex(index),
+    let leftChildIndex = this.computeLeftChildIndex(index),
       rightChildIndex = this.computeRightChildIndex(index);
 
-    const leftChildValue = getNodeValue(leftChildIndex),
+    let leftChildValue = this.getNodeValue(leftChildIndex),
       rightChildValue = this.getNodeValue(rightChildIndex);
+
+    let currentNodeValue = this.heap[index].getFrequency();
+    
+    // console.log(
+    //   "Tree: ",
+    //   index,
+    //   currentNodeValue,
+    //   "left child: ",
+    //   leftChildIndex,
+    //   leftChildValue,
+    //   "right child: ",
+    //   rightChildIndex,
+    //   rightChildValue
+    // );
 
     // Ensure that the index is indexable and
     while (
       index < this.heap.length &&
-      (this.heap[index] > leftChildValue ||
-        (rightChildIndex < this.heap.length &&
-          this.heap[index] > rightChildValue))
+      (currentNodeValue > leftChildValue || currentNodeValue > rightChildValue)
     ) {
       // Get the min value and index among both children
       const minChildValue = Math.min(
@@ -60,14 +82,15 @@ class MinHeap {
         minChildValue === leftChildValue ? leftChildIndex : rightChildIndex;
 
       // Swap the current position with the min child index
-      swap(index, minChildIndex);
+      this.swap(index, minChildIndex);
 
       // Set the index to the swapped index, and reset left/right child index and child value
       index = minChildIndex;
-      (leftChildIndex = this.computeLeftChildIndex(index)),
-        (rightChildIndex = this.computeRightChildIndex(index));
-      (leftChildValue = this.getNodeValue(leftChildIndex)),
-        (rightChildValue = this.getNodeValue(rightChildIndex));
+      currentNodeValue = this.heap[index].getFrequency();
+      leftChildIndex = this.computeLeftChildIndex(index);
+      rightChildIndex = this.computeRightChildIndex(index);
+      leftChildValue = this.getNodeValue(leftChildIndex);
+      rightChildValue = this.getNodeValue(rightChildIndex);
     }
   }
 
@@ -76,10 +99,10 @@ class MinHeap {
    */
   siftUp(index) {
     // If the index is odd, then its a left child; if the index is even, then its a right child
-    const parentIndex = computeParentIndex(index);
-    while (index > 0 && getNodeValue(index) < getNodeValue(parentIndex)) {
+    let parentIndex = this.computeParentIndex(index);
+    while (index > 0 && this.getNodeValue(index) < this.getNodeValue(parentIndex)) {
       // Swap the two index
-      swap(index, parentIndex);
+      this.swap(index, parentIndex);
 
       // Set the index to the swapped index, and reset the parentIndex
       index = parentIndex;
@@ -92,11 +115,13 @@ class MinHeap {
    * Starts from the last parent element and sift down until we hit the leaf or don't need to sift down
    */
   heapify() {
-    const parentIndex = Math.floor(this.heap.length / 2) - 1;
+    // console.log('Before heap: ', this.heap);
+    let parentIndex = Math.floor(this.heap.length / 2) - 1;
     while (parentIndex > -1) {
       this.siftDown(parentIndex);
       parentIndex -= 1;
     }
+    // console.log('After heap: ', this.heap);
   }
 
   /*
@@ -104,6 +129,8 @@ class MinHeap {
    */
   insert(insertNode) {
     this.heap.push(insertNode);
+    this.length += 1;
+    // console.log(this.heap);
     this.siftUp(this.heap.length - 1);
   }
 
@@ -114,11 +141,17 @@ class MinHeap {
     // Swap root with the last element
     this.swap(0, this.heap.length - 1);
 
-    // Then remove the last element
-    this.heap.pop();
+    // Then remove the last element and decrement the length
+    const removedNode = this.heap.pop();
+    this.length -= 1;
 
     // Then sift down on the root element
-    this.siftDown(0);
+    if (this.length > 0) {
+      this.siftDown(0);
+    }
+
+    // Return the removed node
+    return removedNode;
   }
 
   /*

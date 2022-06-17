@@ -8,7 +8,7 @@ function HuffmanCoding(props) {
   const { text, huffmanCoding } = useContext(EncodeTextContext);
 
   useEffect(() => {
-    console.log(`Coding Huffman: ${text}`);
+    // console.log(`Coding Huffman: ${text}`);
   }, [text]);
 
   const metaInfo = `(Total bits: 0)`;
