@@ -3,9 +3,6 @@
  */
 class MinHeap {
   constructor(array) {
-    for (let node of array) {
-      console.log(node);
-    }
     this.heap = array;
     this.length = array.length;
   }
