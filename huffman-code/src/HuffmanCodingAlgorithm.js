@@ -197,12 +197,17 @@ class HuffmanBinaryTree {
     currentNode.setChildren(headNodeChildren);
   }
 
+  updateObjectValues(nodeOne, object, weight) {
+    const array = object[weight];
+    const nodeOneIndex = array.length;
+  }
+
   updateObject(node, weight, blockObject) {
     if (!blockObject.hasOwnProperty(weight)) {
       blockObject[weight] = [node];
     } else {
       // Tail end will be lowest order; head will be the highest order
-      blockObject[weight].push(node);
+      blockObject[weight].push(node);    
     }
   }
 
@@ -219,12 +224,20 @@ class HuffmanBinaryTree {
     return left
   }
 
+  checkObjectHasProperty(object, weight) {
+    return object.hasOwnProperty(weight) && object[weight].length > 0;
+  }
+
+  getBlockLeader(object, weight) {
+    return object.hasOwnProperty(weight) && object[weight].length > 0 ? object[weight][0] : null;
+  }
+
   /*
    * Uses the Vitter algorithm to create the adaptiveHuffmanTree
    * References: https://en.wikipedia.org/wiki/Adaptive_Huffman_coding,
    *             https://www2.cs.duke.edu/csed/curious/compression/adaptivehuff.html
    */
-  buildAdaptiveHuffmanTree() {
+  oldBuildAdaptiveHuffmanTree() {
     console.log(this.inputText);
     // Create a NYT node which will be the entry point for new characters
     let NYTNode = new HuffmanBinaryTreeNode(0, null, 5000);
@@ -252,79 +265,53 @@ class HuffmanBinaryTree {
         // Put the newLeafNode in the dictionaries
         characterToNodeObject[character] = newLeafNode;
         this.updateObject(newLeafNode, 1, weightToLeafBlockObject);
-        // if (!weightToLeafBlockObject.hasOwnProperty(1)) {
-        //   weightToLeafBlockObject[1] = [newLeafNode];
-        // } else {
-        //   // The tail end will be the lowest order
-        //   weightToLeafBlockObject[1].push(newLeafNode);
-        // }
 
         // Put the NYTNode in the dictionaries
         this.updateObject(NYTNode, 0, weightToInternalBlockObject);
-        // if (!weightToInternalBlockObject.hasOwnProperty(0)) {
-        //   weightToInternalBlockObject[0] = [NYTNode];
-        // } else {
-        //   weightToInternalBlockObject[0].push(NYTNode);
-        // }
         
         // Reassign NYTNode and the NYTNode to the currentInternalNode to be iterated through 
         currentInternalNode = NYTNode;
         NYTNode = newNYTNode;
-        console.log(NYTNode);
       } else {
         // Get the character's corresponding node
         let characterLeaf = characterToNodeObject[character];
 
-        // Get the block's head leaf 
+        // Get the block's head leaf
         let headLeaf = weightToLeafBlockObject[characterLeaf.getFrequency()][0];
 
-        // Swap the block's head leaf with this node 
+        // Swap the block's head leaf with this node
         if (headLeaf !== characterLeaf) {
           this.swapNodeFeatures(headLeaf, characterLeaf);
           // Update the dictionary
           characterToNodeObject[headLeaf.getCharacter()] = headLeaf;
           characterToNodeObject[characterLeaf.getCharacter()] = characterLeaf;
-          
+
           // Swap pointers
           const tmpCharLeaf = characterLeaf;
           characterLeaf = headLeaf;
           headLeaf = tmpCharLeaf;
         }
-        
+
         // Increment the characterLeaf and remove the node from block and add the node to new block
-        // const characterLeafIndex = this.binarySearch(
-        //   weightToLeafBlockObject[characterLeaf.getFrequency()],
-        //   characterLeaf.getNodeOrder()
-        // );
         weightToLeafBlockObject[characterLeaf.getFrequency()].splice(0, 1);
         characterLeaf.incrementFrequency();
-        // Ensure that the leaf nodes precede the internal nodes
-        // const lastNodeInternalNodeBlock = 
-        //   weightToInternalBlockObject.hasOwnProperty(characterLeaf.getFrequency()) 
-        //     && weightToInternalBlockObject[characterLeaf.getFrequency()].length > 0 
-        //     ? weightToInternalBlockObject[characterLeaf.getFrequency()][weightToInternalBlockObject[characterLeaf.getFrequency()].length-1] 
-        //     : null;   
-        // if (lastNodeInternalNodeBlock && characterLeaf.getNodeOrder() > lastNodeInternalNodeBlock.getNodeOrder()) {
-        //   // Swap the nodes and update dictionary
-        //   this.swapNodeFeatures(characterLeaf, lastNodeInternalNodeBlock);
-        //   weightToInternalBlockObject[characterLeaf.getFrequency()][weightToInternalBlockObject[characterLeaf.getFrequency()].length-1] = characterLeaf;
-        //   weightToInternalBlockObject[characterLeaf.getFrequency()].sort((a, b) => b.getNodeOrder() - a.getNodeOrder())
-        //   characterLeaf = lastNodeInternalNodeBlock;
-        //   characterToNodeObject[characterLeaf.getCharacter()] = characterLeaf;
-        // }
+
+        // Ensure that the leaf nodes weight w precede the internal nodes weight w
+        // Find the leader block node weight w
+        
+        // Swap the leader block node with currentLeaf 
+
+        // Check if leader block is an internal node, then swap the leader with lead leaf 
+
+        // Update the object
         this.updateObject(characterLeaf, characterLeaf.getFrequency(), weightToLeafBlockObject);
 
         // Update the currentInternalNode
         currentInternalNode = characterLeaf.getParent();
       }
-      console.log("Character ", character);
+
       // Iterate through all the internal nodes until we hit the root and increment everyone of them 
       while (currentInternalNode.getParent() !== null) {
-        console.log(currentInternalNode);
-        console.log(weightToInternalBlockObject);
-        console.log(
-          `Frequency: ${currentInternalNode.getFrequency()}; ${weightToInternalBlockObject[currentInternalNode.getFrequency()]}`
-        );
         // Get the block's head internal node
         let headInternalNode = weightToInternalBlockObject[currentInternalNode.getFrequency()][0];
 
@@ -342,20 +329,6 @@ class HuffmanBinaryTree {
         weightToInternalBlockObject[currentInternalNode.getFrequency()].splice(0, 1);
         currentInternalNode.incrementFrequency();
         
-        // Ensure the currentInternalNode is ahead of the head of the block leaf
-        const headBlockLeaf = 
-          weightToLeafBlockObject.hasOwnProperty(currentInternalNode.getFrequency())
-          && weightToLeafBlockObject[currentInternalNode.getFrequency()].length > 0
-          ? weightToLeafBlockObject[currentInternalNode.getFrequency()][0]
-          : null;
-        if (headBlockLeaf && currentInternalNode.getNodeOrder() < headBlockLeaf.getNodeOrder()) {
-          // Swap the two nodes
-          this.swapNodeFeatures(currentInternalNode, headBlockLeaf);
-          weightToLeafBlockObject[currentInternalNode.getFrequency()][0] = currentInternalNode;
-          weightToLeafBlockObject[currentInternalNode.getFrequency()].sort((a, b) => b.getNodeOrder() - a.getNodeOrder())
-          characterToNodeObject[currentInternalNode.getCharacter()] = currentInternalNode;
-          currentInternalNode = headBlockLeaf;
-        }
         this.updateObject(currentInternalNode, currentInternalNode.getFrequency(), weightToInternalBlockObject);
 
         // Reset the internal node pointer
@@ -368,6 +341,169 @@ class HuffmanBinaryTree {
 
     console.log(characterToNodeObject);
     console.log(root);
+    return root;
+  }
+
+  buildAdaptiveHuffmanTree() {
+    // Create a NYT node which will be the entry point for new characters
+    const maxNodeOrder = 50000;
+    let NYTNode = new HuffmanBinaryTreeNode(0, null, maxNodeOrder);
+    const root = NYTNode;
+    
+    // Create dictionaries:
+    // ! Believe can optimize this structure, to have a dictionary linkedlist, s.t. the values can be connected through pointers (allowing easy insertion and deletion)
+    const characterToNodeObject = {},
+      weightToInternalBlockObject = {},
+      weightToLeafBlockObject = {};
+    
+    // Iterate through each character of the input text
+    for (let character of this.inputText) {
+      console.log(character);
+      console.log(weightToInternalBlockObject);
+      console.log(weightToLeafBlockObject);
+      // Depending on the whether we seen the character or not the internal node will differ
+      let characterLeaf = null;
+
+      // Either insert a new leaf into the tree or increment the frequency of an existing leaf
+      if (!characterToNodeObject.hasOwnProperty(character)) {
+        // Create two new tree nodes and connect to parent
+        const currentNYTNodeOrder = NYTNode.getNodeOrder();
+        const newNYTNode = new HuffmanBinaryTreeNode(0, null, currentNYTNodeOrder - 2, NYTNode);
+        characterLeaf = new HuffmanBinaryTreeNode(1, character, currentNYTNodeOrder - 1, NYTNode);
+        NYTNode.setChildren([newNYTNode, characterLeaf]);
+
+        // Put the new leaf in the dictionaries
+        characterToNodeObject[character] = characterLeaf;
+        this.updateObject(characterLeaf, 1, weightToLeafBlockObject);
+
+        // Put the NYTNode in the dictionaries
+        this.updateObject(NYTNode, 0, weightToInternalBlockObject);
+
+        // Reassign NYTNode and the newNYTNode
+        NYTNode = newNYTNode;
+      } else {
+        // Get the leaf node assoicated with the character
+        characterLeaf = characterToNodeObject[character];
+        const characterLeafWeight = characterLeaf.getFrequency(); 
+        let blockLeader = this.getBlockLeader(weightToInternalBlockObject, characterLeafWeight),
+          leafLeader = this.getBlockLeader(weightToLeafBlockObject, characterLeafWeight);
+
+        // Swap the block's leader with this node
+        // If the leafLeader is the same as the characterLeaf, if so don't swap
+        if (leafLeader !== characterLeaf) {
+          console.log("Comparing line 394");
+          // Swap the features
+          this.swapNodeFeatures(leafLeader, characterLeaf);
+
+          // Swap pointers
+          const tmpLeafPointer = characterLeaf;
+          characterLeaf = leafLeader;
+          leafLeader = tmpLeafPointer;
+
+          // Update the objects
+          characterToNodeObject[leafLeader.getCharacter()] = leafLeader;
+          characterToNodeObject[characterLeaf.getCharacter()] = characterLeaf;
+
+          // The characterLeaf is now the leader of the leafs
+        }
+
+        // If the block's leader is internal node, then swap the characterLeaf with the leafLeader and swap the characterLeaf with the blockLeader
+        if (blockLeader !== null && blockLeader !== root && characterLeaf.getParent() !== blockLeader) {
+          console.log("Comparing line 412", blockLeader, characterLeaf);
+          // Swap the features
+          this.swapNodeFeatures(blockLeader, characterLeaf);
+
+          // Swap pointers
+          const tmpLeafPointer = characterLeaf;
+          characterLeaf = blockLeader;
+          blockLeader = tmpLeafPointer;
+
+          // Update the objects
+          characterToNodeObject[characterLeaf.getCharacter()] = characterLeaf;
+
+          // Remove the blockLeader node from weightToInternalBlockObject
+          // const blockLeaderPreviousIndex = weightToInternalBlockObject[characterLeafWeight].findIndex((node) => node.getNodeOrder() === characterLeaf.getNodeOrder());
+          // weightToInternalBlockObject[characterLeafWeight].splice(blockLeaderPreviousIndex, 1);
+          weightToInternalBlockObject[characterLeafWeight].splice(0, 1);
+          weightToInternalBlockObject[characterLeafWeight].push(blockLeader);
+          // weightToInternalBlockObject.sort((a, b) => b-a)
+
+          // Remove the characterLeader node from weightToLeafBlockObject and add the characterLeaf to the front of the array
+          weightToLeafBlockObject[characterLeafWeight].splice(0, 1, characterLeaf); // Probably not necessary
+        }
+
+        // Increase the frequency, and remove it from the dictionary and add it to weight + 1 
+        // Remove characterLeafWeight from weightToLeafBlockObject  
+        console.log("Checking if removing:", weightToLeafBlockObject);
+        weightToLeafBlockObject[characterLeafWeight].splice(0, 1);
+        characterLeaf.incrementFrequency();
+        this.updateObject(characterLeaf, characterLeafWeight+1, weightToLeafBlockObject);
+      }
+
+      console.log(characterLeaf.getParent().getCharacter());
+
+      // Iterate upwards from the leaf to the root incrementing and swapping the internal nodes we past
+      let currentInternalNode = characterLeaf.getParent();
+      while (currentInternalNode.getParent() !== null) {
+        const currentInternalNodeWeight = currentInternalNode.getFrequency();
+        // Swap with the leaf node of w+1 weight, swap this currentInternalNode with the blockLeader
+        let leafLeader = this.getBlockLeader(weightToLeafBlockObject, currentInternalNodeWeight+1),
+          blockLeader = this.getBlockLeader(weightToInternalBlockObject, currentInternalNodeWeight);
+
+        let nextNode = null;
+
+        if (blockLeader !== currentInternalNode) {
+          console.log("Comparing line 455", blockLeader.getCharacter(), currentInternalNode.getCharacter());
+          // Swap the features
+          this.swapNodeFeatures(blockLeader, currentInternalNode);
+
+          // Swap the pointers
+          const tmpLeafPointer = currentInternalNode;
+          currentInternalNode = blockLeader;
+          blockLeader = tmpLeafPointer;
+
+          // The currentInternalNode is now the leader of the internal node block
+        }
+
+        // Check if there exists a leafLeader, if so swap; otherwise, no need to swap
+        if (leafLeader !== null && leafLeader.getNodeOrder() > currentInternalNode.getNodeOrder()) {
+          console.log("Comparing line 469");
+          // Swap the features
+          this.swapNodeFeatures(currentInternalNode, leafLeader);
+
+          // Swap pointers
+          const tmpLeafPointer = leafLeader;
+          leafLeader = currentInternalNode;
+          currentInternalNode = tmpLeafPointer;
+
+          // Update the objects
+          characterToNodeObject[leafLeader.getCharacter()] = leafLeader;
+
+          // Remove the old leafLeader node from weightToLeafBlockObject
+          weightToLeafBlockObject[currentInternalNodeWeight+1].splice(0, 1);
+          weightToLeafBlockObject[currentInternalNodeWeight+1].push(leafLeader);
+          // weightToLeafBlockObject[currentInternalNodeWeight].sort((a, b) => b-a);
+
+          // Remove the currentInternal node from the weightToInternalBlockObject
+          weightToInternalBlockObject[currentInternalNodeWeight].splice(0, 1, currentInternalNode);
+
+          nextNode = leafLeader.getParent();
+        }
+
+        weightToInternalBlockObject[currentInternalNodeWeight].splice(0, 1);
+        currentInternalNode.incrementFrequency();
+        this.updateObject(currentInternalNode, currentInternalNode.getFrequency(), weightToInternalBlockObject);
+
+        currentInternalNode =
+          nextNode !== null ? nextNode : currentInternalNode.getParent();
+      }
+
+      // Increment the root node and put it to the correct entry
+      weightToInternalBlockObject[currentInternalNode.getFrequency()].splice(0, 1);
+      currentInternalNode.incrementFrequency();
+      this.updateObject(currentInternalNode, currentInternalNode.getFrequency(), weightToInternalBlockObject);
+    }
+
     return root;
   }
 }
