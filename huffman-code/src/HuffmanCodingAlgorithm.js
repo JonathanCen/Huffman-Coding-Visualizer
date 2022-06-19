@@ -49,6 +49,14 @@ class HuffmanBinaryTreeNode {
     return [this.leftChild, this.rightChild];
   }
 
+  getLeftChild() {
+    return this.leftChild;
+  }
+
+  getRightChild() {
+    return this.rightChild;
+  }
+
   getParent() {
     return this.parent;
   }
@@ -67,6 +75,10 @@ class HuffmanBinaryTreeNode {
   setChildren(children) {
     this.leftChild = children[0];
     this.rightChild = children[1];
+  }
+
+  setParent(parent) {
+    this.parent = parent;
   }
 
   incrementFrequency() {
@@ -182,11 +194,21 @@ class HuffmanBinaryTree {
     return minHeap.deleteMin();
   }
 
+  reassignParent(childrenNodes, parentNode) {
+    for (let child of childrenNodes) {
+      if (child !== null) {
+        child.setParent(parentNode);
+      }
+    }
+  }
 
   swapNodeFeatures(headNode, currentNode) {
+    // Swap each node's attributes
     const headNodeFrequency = headNode.getFrequency(),
       headNodeCharacter = headNode.getCharacter(),
       headNodeChildren = headNode.getChildren();
+
+    const currentNodeChildren = currentNode.getChildren();
 
     headNode.setFrequency(currentNode.getFrequency());
     headNode.setCharacter(currentNode.getCharacter());
@@ -195,6 +217,10 @@ class HuffmanBinaryTree {
     currentNode.setFrequency(headNodeFrequency);
     currentNode.setCharacter(headNodeCharacter);
     currentNode.setChildren(headNodeChildren);
+
+    // Reassign the children to their appropriate parent
+    this.reassignParent(headNodeChildren, currentNode);
+    this.reassignParent(currentNodeChildren, headNode);
   }
 
   updateObjectValues(nodeOne, object, weight) {
@@ -392,6 +418,7 @@ class HuffmanBinaryTree {
         // If the leafLeader is the same as the characterLeaf, if so don't swap
         if (leafLeader !== characterLeaf) {
           console.log("Comparing line 394");
+
           // Swap the features
           this.swapNodeFeatures(leafLeader, characterLeaf);
 
@@ -424,9 +451,9 @@ class HuffmanBinaryTree {
           // Remove the blockLeader node from weightToInternalBlockObject
           // const blockLeaderPreviousIndex = weightToInternalBlockObject[characterLeafWeight].findIndex((node) => node.getNodeOrder() === characterLeaf.getNodeOrder());
           // weightToInternalBlockObject[characterLeafWeight].splice(blockLeaderPreviousIndex, 1);
-          weightToInternalBlockObject[characterLeafWeight].splice(0, 1);
-          weightToInternalBlockObject[characterLeafWeight].push(blockLeader);
-          // weightToInternalBlockObject.sort((a, b) => b-a)
+          weightToInternalBlockObject[characterLeafWeight].splice(0, 1, blockLeader);
+          // weightToInternalBlockObject[characterLeafWeight].push(blockLeader);
+          weightToInternalBlockObject[characterLeafWeight].sort((a, b) => b.getNodeOrder() - a.getNodeOrder());
 
           // Remove the characterLeader node from weightToLeafBlockObject and add the characterLeaf to the front of the array
           weightToLeafBlockObject[characterLeafWeight].splice(0, 1, characterLeaf); // Probably not necessary
@@ -440,10 +467,11 @@ class HuffmanBinaryTree {
         this.updateObject(characterLeaf, characterLeafWeight+1, weightToLeafBlockObject);
       }
 
-      console.log(characterLeaf.getParent().getCharacter());
+      console.log(characterLeaf.getParent().getNodeOrder());
 
       // Iterate upwards from the leaf to the root incrementing and swapping the internal nodes we past
       let currentInternalNode = characterLeaf.getParent();
+      console.log(`CurrentInternalNode ${currentInternalNode.getNodeOrder()}`)
       while (currentInternalNode.getParent() !== null) {
         const currentInternalNodeWeight = currentInternalNode.getFrequency();
         // Swap with the leaf node of w+1 weight, swap this currentInternalNode with the blockLeader
@@ -468,6 +496,9 @@ class HuffmanBinaryTree {
         // Check if there exists a leafLeader, if so swap; otherwise, no need to swap
         if (leafLeader !== null && leafLeader.getNodeOrder() > currentInternalNode.getNodeOrder()) {
           console.log("Comparing line 469");
+          // console.log(
+          //   `LeafLeader : ${leafLeader.getNodeOrder()}, currentInternalNode: ${currentInternalNode.getNodeOrder()}`
+          // );
           // Swap the features
           this.swapNodeFeatures(currentInternalNode, leafLeader);
 
@@ -475,14 +506,13 @@ class HuffmanBinaryTree {
           const tmpLeafPointer = leafLeader;
           leafLeader = currentInternalNode;
           currentInternalNode = tmpLeafPointer;
-
           // Update the objects
           characterToNodeObject[leafLeader.getCharacter()] = leafLeader;
 
           // Remove the old leafLeader node from weightToLeafBlockObject
-          weightToLeafBlockObject[currentInternalNodeWeight+1].splice(0, 1);
-          weightToLeafBlockObject[currentInternalNodeWeight+1].push(leafLeader);
-          // weightToLeafBlockObject[currentInternalNodeWeight].sort((a, b) => b-a);
+          weightToLeafBlockObject[currentInternalNodeWeight+1].splice(0, 1, leafLeader);
+          // weightToLeafBlockObject[currentInternalNodeWeight+1].push(leafLeader);
+          weightToLeafBlockObject[currentInternalNodeWeight+1].sort((a, b) => b.getNodeOrder()-a.getNodeOrder()); // Do this for now
 
           // Remove the currentInternal node from the weightToInternalBlockObject
           weightToInternalBlockObject[currentInternalNodeWeight].splice(0, 1, currentInternalNode);
