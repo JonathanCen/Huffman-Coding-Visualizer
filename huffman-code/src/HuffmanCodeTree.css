@@ -1,5 +1,6 @@
 #huffman-code-tree {
   width: 100%;
   height: 90%;
+  position: sticky;
   /* border: 1px solid black; */
 }

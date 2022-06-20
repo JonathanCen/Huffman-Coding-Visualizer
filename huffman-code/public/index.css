@@ -4,3 +4,16 @@ body {
   margin: 0;
   padding: 0;
 }
+
+path {
+  fill: none;
+  stroke: rgb(132, 186, 230);
+}
+
+text {
+  text-shadow:
+    -1px -1px 3px white,
+    -1px  1px 3px white,
+     1px -1px 3px white,
+     1px  1px 3px white;  
+}

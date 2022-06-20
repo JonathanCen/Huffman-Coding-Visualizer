@@ -543,6 +543,14 @@ class HuffmanBinaryTree {
    * Using BFS, explore the entire tree and capture all the characters
    */
   generateEncoding() {
+    // Check if the root is the only element in the tree
+    if (this.root.getCharacter() !== null) {
+      const encoding = {};
+      encoding[this.root.getCharacter()] = '0';
+      this.encoding = encoding;
+      return encoding;
+    }
+
     // Create a queue that holds the tree node and the current string to that node;
     // create a encoding that holds all the encodings: key - character ; value - string to character
     let queue = [[this.root, '']],
