@@ -94,6 +94,7 @@ class HuffmanBinaryTree {
       huffmanVariation === "Huffman Coding"
         ? this.buildHuffmanTree()
         : this.buildAdaptiveHuffmanTree();
+    this.encoding = null;
   }
 
   constructFrequencyObject() {
@@ -384,9 +385,9 @@ class HuffmanBinaryTree {
     
     // Iterate through each character of the input text
     for (let character of this.inputText) {
-      console.log(character);
-      console.log(weightToInternalBlockObject);
-      console.log(weightToLeafBlockObject);
+      // console.log(character);
+      // console.log(weightToInternalBlockObject);
+      // console.log(weightToLeafBlockObject);
       // Depending on the whether we seen the character or not the internal node will differ
       let characterLeaf = null;
 
@@ -417,7 +418,7 @@ class HuffmanBinaryTree {
         // Swap the block's leader with this node
         // If the leafLeader is the same as the characterLeaf, if so don't swap
         if (leafLeader !== characterLeaf) {
-          console.log("Comparing line 394");
+          // console.log("Comparing line 394"); 
 
           // Swap the features
           this.swapNodeFeatures(leafLeader, characterLeaf);
@@ -436,7 +437,7 @@ class HuffmanBinaryTree {
 
         // If the block's leader is internal node, then swap the characterLeaf with the leafLeader and swap the characterLeaf with the blockLeader
         if (blockLeader !== null && blockLeader !== root && characterLeaf.getParent() !== blockLeader) {
-          console.log("Comparing line 412", blockLeader, characterLeaf);
+          // console.log("Comparing line 412", blockLeader, characterLeaf);
           // Swap the features
           this.swapNodeFeatures(blockLeader, characterLeaf);
 
@@ -461,17 +462,17 @@ class HuffmanBinaryTree {
 
         // Increase the frequency, and remove it from the dictionary and add it to weight + 1 
         // Remove characterLeafWeight from weightToLeafBlockObject  
-        console.log("Checking if removing:", weightToLeafBlockObject);
+        // console.log("Checking if removing:", weightToLeafBlockObject);
         weightToLeafBlockObject[characterLeafWeight].splice(0, 1);
         characterLeaf.incrementFrequency();
         this.updateObject(characterLeaf, characterLeafWeight+1, weightToLeafBlockObject);
       }
 
-      console.log(characterLeaf.getParent().getNodeOrder());
+      // console.log(characterLeaf.getParent().getNodeOrder());
 
       // Iterate upwards from the leaf to the root incrementing and swapping the internal nodes we past
       let currentInternalNode = characterLeaf.getParent();
-      console.log(`CurrentInternalNode ${currentInternalNode.getNodeOrder()}`)
+      // console.log(`CurrentInternalNode ${currentInternalNode.getNodeOrder()}`)
       while (currentInternalNode.getParent() !== null) {
         const currentInternalNodeWeight = currentInternalNode.getFrequency();
         // Swap with the leaf node of w+1 weight, swap this currentInternalNode with the blockLeader
@@ -481,7 +482,7 @@ class HuffmanBinaryTree {
         let nextNode = null;
 
         if (blockLeader !== currentInternalNode) {
-          console.log("Comparing line 455", blockLeader.getCharacter(), currentInternalNode.getCharacter());
+          // console.log("Comparing line 455", blockLeader.getCharacter(), currentInternalNode.getCharacter());
           // Swap the features
           this.swapNodeFeatures(blockLeader, currentInternalNode);
 
@@ -495,7 +496,7 @@ class HuffmanBinaryTree {
 
         // Check if there exists a leafLeader, if so swap; otherwise, no need to swap
         if (leafLeader !== null && leafLeader.getNodeOrder() > currentInternalNode.getNodeOrder()) {
-          console.log("Comparing line 469");
+          // console.log("Comparing line 469");
           // console.log(
           //   `LeafLeader : ${leafLeader.getNodeOrder()}, currentInternalNode: ${currentInternalNode.getNodeOrder()}`
           // );
@@ -535,6 +536,88 @@ class HuffmanBinaryTree {
     }
 
     return root;
+  }
+
+  /*
+   * Generate encoding
+   * Using BFS, explore the entire tree and capture all the characters
+   */
+  generateEncoding() {
+    // Create a queue that holds the tree node and the current string to that node;
+    // create a encoding that holds all the encodings: key - character ; value - string to character
+    let queue = [[this.root, '']],
+      encoding = {};
+    
+    while (queue.length > 0) {
+      const newQueue = [];
+
+      // Iterate through the queue
+      for (const [node, stringPath] of queue) {
+
+        // If the current node has a character, then it's a leaf node
+        if (node.getCharacter() !== null) {
+          encoding[node.getCharacter()] = stringPath;
+          continue;
+        }
+
+        // Check if there is a left child; if so, then append a '0' to the current path
+        if (node.getLeftChild() !== null) {
+          newQueue.push([node.getLeftChild(), stringPath + '0']);
+        }
+
+        // Check if there is a right child; if so, then append a '1' to the current path
+        if (node.getRightChild() !== null) {
+          newQueue.push([node.getRightChild(), stringPath + '1']);
+        }
+      }
+
+      // Reassign the queue
+      queue = newQueue;
+    }
+
+    // Update the encoding attribute and return the encoding dictionary
+    this.encoding = encoding;
+    return encoding;
+  }
+
+  /*
+   * Do a DFS and recursively create json of the tree 
+   * Each node needs: name, parent, children, frequency
+   */
+  jsonifyHelper(node) {
+    // Create a default node, each node has
+    const currentNode = {
+      "name" : node.getCharacter(), // ! Have to convert the characters to readable if its characters that arent readiable
+      "parent" : node.getParent(),
+      "count" : node.getFrequency(),
+    };
+
+    // Check if its a leaf node
+    if (node.getCharacter() !== null) {
+      return currentNode;
+    }
+
+    const nodeChildren = [];
+
+    if (node.getLeftChild() !== null) {
+      nodeChildren.push(this.jsonifyHelper(node.getLeftChild()));
+    }
+
+    if (node.getRightChild() !== null) {
+      nodeChildren.push(this.jsonifyHelper(node.getRightChild()));
+    }
+
+    // Assign the children back to the node
+    currentNode["children"] = nodeChildren;
+
+    return currentNode
+  }
+
+  /*
+   * Generate json of tree
+   */
+  jsonify() {
+    return this.jsonifyHelper(this.root);
   }
 }
 

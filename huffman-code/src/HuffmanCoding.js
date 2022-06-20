@@ -5,11 +5,11 @@ import { mouseEnter, mouseLeave } from "./CodingMouseEvents";
 import "./Coding.css";
 
 function HuffmanCoding(props) {
-  const { text, huffmanCoding } = useContext(EncodeTextContext);
+  const { huffmanCoding } = useContext(EncodeTextContext);
 
-  useEffect(() => {
-    // console.log(`Coding Huffman: ${text}`);
-  }, [text]);
+  // useEffect(() => {
+  //   // console.log(`Coding Huffman: ${text}`);
+  // }, [text]);
 
   const metaInfo = `(Total bits: 0)`;
 
@@ -24,7 +24,7 @@ function HuffmanCoding(props) {
         {props.codingName}: &nbsp; {metaInfo}
       </Typography>
       <div disabled className="coding-div">
-        {text.map((charCode, index) => {
+        {huffmanCoding.map((charCode, index) => {
           return (
             <span
               className={"coding-span"}
