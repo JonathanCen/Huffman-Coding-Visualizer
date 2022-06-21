@@ -22,7 +22,7 @@ const EncodeTextProvider = ({ children }) => {
 
       // Construct the huffman tree based on the variation
       const huffmanTree = new HuffmanBinaryTree(text, huffmanVariation);
-      huffmanTree.printTree();
+      // huffmanTree.printTree();
 
       // Get the encoding
       const huffmanEncoding = huffmanTree.generateEncoding();

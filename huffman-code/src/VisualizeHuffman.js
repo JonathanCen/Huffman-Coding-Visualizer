@@ -25,7 +25,7 @@ function visualizeHuffman(data) {
   // Get the svg element and the height/width of it 
   const svg = select('svg');
   const svgWidth = svg.node().getBoundingClientRect().width;
-  
+
   // Clear the current svg content
   svg.selectAll('*').remove();
 
@@ -135,6 +135,28 @@ function visualizeHuffman(data) {
     .attr('fill', 'lightblue')
     .attr('stroke', 'darkgray')
     .attr('stroke-width', 1e-6);
+
+  // Add tooltips to the leaf nodes of the tree
+  const tooltip = svgG
+    .append("div")
+    .classed("tooltip", true)
+    .style("opacity", 1);
+
+  svg.on('mouseover', (e, d) => {
+    svgG.selectAll('rect.node')
+      .transition()
+      .duration(100)
+      .attr("width", rectLeafDim.width)
+      .attr("height", rectLeafDim.height);
+    svgG.selectAll('text.label')
+      .transition()
+      .duration(100)
+      .attr('x', (d) => d.x)
+      .attr('y', (d) => d.y+5) // Change the position of the text in the nodes
+    tooltip.transition()
+      .duration(150)
+      .style("opacity", 0);
+  })
   
   // Draw a rectangle for leaf nodes
   const rectangleNodes = svgG.selectAll('rect.node')
@@ -142,26 +164,79 @@ function visualizeHuffman(data) {
   
   rectangleNodes.append('rect')
     .classed('node', true)
+    .attr('id', (d, i) => `rect-node-${i}`)
     .attr('x', (d) => d.x - (rectLeafDim.width/2))
     .attr('y', (d) => d.y - (rectLeafDim.height/2))
     .attr('rx', 4)
     .attr('width', 1e-6)
     .attr('height', 1e-6)
     .attr('fill', '#edf4fb')
-    .attr('stroke', 'darkgray');
+    .attr('stroke', 'darkgray')
+    .on('mouseover',  (e, d) => {
+      const idNum = e.target.id.split("-")[2];
+      svgG.select(`#rect-node-${idNum}`)
+        .transition()
+        .duration(100)
+        .attr("width", rectLeafDim.width + 10)
+        .attr("height", rectLeafDim.height + 10);
+      svgG
+        .select(`#leaf-node-${idNum}`)
+        .transition()
+        .duration(100)
+        .attr("x", (d) => d.x + 5)
+        .attr("y", (d) => d.y + 10);
+      tooltip.transition()
+        .duration(150)
+        .style("opacity", 1)
+      tooltip.html(`Coding: ${110101}`)
+        .style('left', d.x+100)
+        .style('top', d.y)
+      e.stopImmediatePropagation();
+  }).on('mouseout', (e, d) => {
+    const idNum = e.target.id.split("-")[2];
+    svgG
+      .select(`#rect-node-${idNum}`)
+      .attr("width", rectLeafDim.width + 10)
+      .attr("height", rectLeafDim.height + 10);
+    svgG
+      .select(`#leaf-node-${idNum}`)
+      .attr("x", (d) => d.x + 5)
+      .attr("y", (d) => d.y + 10);
+  })
 
   
   // Add the text to the nodes of the tree
   const nodeText = svgG.selectAll('node-text.label')
     .data(root.descendants()).enter();
   
+  var leafIdCounter = 0
   nodeText.append('text').classed('label', true)
+    .attr('id', (d, i) => d.data.name !== null ? `leaf-node-${leafIdCounter++}` : '')
     .style('fill', 'gray')
     .attr('x', (d) => d.x)
     .attr('y', (d) => d.y+5) // Change the position of the text in the nodes
     .attr('text-anchor', 'middle')
     .text((d) => (d.data.name === null ? d.data.count === 0 ? `'NYT'` : d.data.count : `'${d.data.name}' | ${d.data.count}`))
-    .style("fill-opacity", 1e-6);
+    .style("fill-opacity", 1e-6)
+    .on('mouseover',  (e, d) => {
+      const idNum = e.target.id.split("-")[2];
+      svgG.select(`#rect-node-${idNum}`)
+        .attr("width", rectLeafDim.width + 10)
+        .attr("height", rectLeafDim.height + 10);
+      svgG.select(`#leaf-node-${idNum}`)
+        .attr("x", (d) => d.x + 5)
+        .attr("y", (d) => d.y + 10);
+      e.stopImmediatePropagation();
+
+  }).on('mouseout', (e, d) => {
+      const idNum = e.target.id.split("-")[2];
+      svgG.select(`#rect-node-${idNum}`)
+        .attr("width", rectLeafDim.width + 10)
+        .attr("height", rectLeafDim.height + 10);
+      svgG.select(`#leaf-node-${idNum}`)
+        .attr("x", (d) => d.x + 5)
+        .attr("y", (d) => d.y + 10);
+  })
 
   // Adding transition for nodes
   const nodeTransition = transition()
