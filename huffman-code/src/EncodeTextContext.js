@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useLayoutEffect } from "react";
 import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
 import visualizeHuffman from "./VisualizeHuffman";
 import { select } from 'd3';
@@ -10,7 +10,7 @@ const EncodeTextProvider = ({ children }) => {
   const { huffmanVariation } = useContext(HuffmanCodeVariationContext);
 
   const [text, setText] = useState([]);
-  // const [huffmanTree, setHuffmanTree] = useState(null); // This is not used
+  const [huffmanTreeJSON, setHuffmanTreeJSON] = useState({}); // This is not used
   const [binaryCode, setBinaryCode] = useState([]);
   const [huffmanCoding, setHuffmanCoding] = useState([]);
 
@@ -22,7 +22,6 @@ const EncodeTextProvider = ({ children }) => {
 
       // Construct the huffman tree based on the variation
       const huffmanTree = new HuffmanBinaryTree(text, huffmanVariation);
-      // setHuffmanTree(huffmanTree);
       huffmanTree.printTree();
 
       // Get the encoding
@@ -31,6 +30,7 @@ const EncodeTextProvider = ({ children }) => {
 
       // Visualize it
       const huffmanJSON = huffmanTree.jsonify();
+      setHuffmanTreeJSON(JSON.parse(JSON.stringify(huffmanJSON)));
       visualizeHuffman(huffmanJSON);
     } else {
       // Then the text is empty so reset all the state and svg
@@ -40,6 +40,24 @@ const EncodeTextProvider = ({ children }) => {
       svg.selectAll('*').remove();
     }
   }, [text, huffmanVariation]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (Object.entries(huffmanTreeJSON).length > 0) {
+        visualizeHuffman(huffmanTreeJSON);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return _ => {window.removeEventListener("resize", handleResize);}
+  }, [huffmanTreeJSON]);
+
+  // useLayoutEffect(() => {
+  //   const rerenderHuffman = () => {
+  //     visualizeHuffman(huffmanTreeJSON);
+  //   }
+  //   window.addEventListener('resize', rerenderHuffman);
+  //   return () => window.removeEventListener("resize", rerenderHuffman);
+  // }, [])
 
   return (
     <EncodeTextContext.Provider

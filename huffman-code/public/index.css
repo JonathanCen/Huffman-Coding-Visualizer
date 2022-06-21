@@ -10,6 +10,18 @@ path {
   stroke: rgb(132, 186, 230);
 }
 
+#path-text {
+  font-size: 10px;
+}
+
+svg, circle, text {
+  cursor: grab;
+}
+
+svg:active {
+  cursor: grabbing;
+}
+
 text {
   text-shadow:
     -1px -1px 3px white,
