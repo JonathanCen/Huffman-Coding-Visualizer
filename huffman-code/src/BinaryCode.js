@@ -5,7 +5,7 @@ import { mouseEnter, mouseLeave } from "./CodingMouseEvents";
 import "./Coding.css";
 
 function BinaryCode(props) {
-  const { binaryCode } = useContext(EncodeTextContext);
+  const { binaryCode, huffmanTreePaths } = useContext(EncodeTextContext);
 
   useEffect(() => {
     // console.log(`Encoding ASCII Coding: ${binaryCode}`);
@@ -28,8 +28,8 @@ function BinaryCode(props) {
           return (
             <span
               className={"coding-span"}
-              onMouseEnter={(e) => mouseEnter(e)}
-              onMouseLeave={(e) => mouseLeave(e)}
+              onMouseEnter={(e) => mouseEnter(e, huffmanTreePaths)}
+              onMouseLeave={(e) => mouseLeave(e, huffmanTreePaths)}
               id={`ascii-coding-${index}`}
               key={index}
             >

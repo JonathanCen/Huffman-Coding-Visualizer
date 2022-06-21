@@ -5,7 +5,7 @@ import { mouseEnter, mouseLeave } from "./CodingMouseEvents";
 import "./Coding.css";
 
 function HuffmanCoding(props) {
-  const { huffmanCoding } = useContext(EncodeTextContext);
+  const { huffmanCoding, huffmanTreePaths } = useContext(EncodeTextContext);
 
   const metaInfo = `(Total bits: 0)`;
 
@@ -24,8 +24,8 @@ function HuffmanCoding(props) {
           return (
             <span
               className={"coding-span"}
-              onMouseEnter={(e) => mouseEnter(e)}
-              onMouseLeave={(e) => mouseLeave(e)}
+              onMouseEnter={(e) => mouseEnter(e, huffmanTreePaths)}
+              onMouseLeave={(e) => mouseLeave(e, huffmanTreePaths)}
               id={`huffman-coding-${index}`}
               key={index}
             >

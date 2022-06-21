@@ -10,8 +10,9 @@ const EncodeTextProvider = ({ children }) => {
   const { huffmanVariation } = useContext(HuffmanCodeVariationContext);
 
   const [text, setText] = useState([]);
-  const [huffmanTreeJSON, setHuffmanTreeJSON] = useState({}); // This is not used
   const [binaryCode, setBinaryCode] = useState([]);
+  const [huffmanTreeJSON, setHuffmanTreeJSON] = useState({});
+  const [huffmanTreePaths, setHuffmanTreePaths] = useState({}); // This is to animate the paths
   const [huffmanCoding, setHuffmanCoding] = useState([]);
 
   useEffect(() => {
@@ -26,7 +27,8 @@ const EncodeTextProvider = ({ children }) => {
 
       // Get the encoding
       const huffmanEncoding = huffmanTree.generateEncoding();
-      setHuffmanCoding(text.map((char) => huffmanEncoding[char]));
+      setHuffmanCoding(text.map((char) => huffmanEncoding[char]["stringPath"]));
+      setHuffmanTreePaths(huffmanEncoding);
 
       // Visualize it
       const huffmanJSON = huffmanTree.jsonify();
@@ -64,6 +66,7 @@ const EncodeTextProvider = ({ children }) => {
         setText,
         binaryCode,
         huffmanCoding,
+        huffmanTreePaths,
       }}
     >
       {children}

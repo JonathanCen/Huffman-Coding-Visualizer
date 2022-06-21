@@ -6,7 +6,7 @@ import "./Coding.css";
 
 function InputText() {
 
-  const { text } = useContext(EncodeTextContext);
+  const { text, huffmanTreePaths } = useContext(EncodeTextContext);
 
   return (
     <React.Fragment>
@@ -23,12 +23,12 @@ function InputText() {
           return (
             <span
               className={"coding-span"}
-              onMouseEnter={(e) => mouseEnter(e)}
-              onMouseLeave={(e) => mouseLeave(e)}
+              onMouseEnter={(e) => mouseEnter(e, huffmanTreePaths)}
+              onMouseLeave={(e) => mouseLeave(e, huffmanTreePaths)}
               id={`text-coding-${index}`}
               key={index}
             >
-              &nbsp; '{char === ' ' ? 'Space' : char}' &nbsp;
+              &nbsp; '{char === " " ? "Space" : char}' &nbsp;
             </span>
           );
         })}

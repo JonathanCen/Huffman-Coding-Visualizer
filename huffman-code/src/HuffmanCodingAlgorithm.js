@@ -266,7 +266,6 @@ class HuffmanBinaryTree {
     const root = NYTNode;
     
     // Create dictionaries:
-    // ! Believe can optimize this structure, to have a dictionary linkedlist, s.t. the values can be connected through pointers (allowing easy insertion and deletion)
     const characterToNodeObject = {},
       weightToInternalBlockObject = {},
       weightToLeafBlockObject = {};
@@ -350,7 +349,6 @@ class HuffmanBinaryTree {
 
       // Iterate upwards from the leaf to the root incrementing and swapping the internal nodes we past
       let currentInternalNode = characterLeaf.getParent();
-      // console.log(`CurrentInternalNode ${currentInternalNode.getNodeOrder()}`)
       while (currentInternalNode.getParent() !== null) {
         const currentInternalNodeWeight = currentInternalNode.getFrequency();
         // Swap with the leaf node of w+1 weight, swap this currentInternalNode with the blockLeader
@@ -410,44 +408,58 @@ class HuffmanBinaryTree {
     return root;
   }
 
+  createDeepCopy(array) {
+    return JSON.parse(JSON.stringify(array));
+  }
+
   /*
    * Generate encoding
    * Using BFS, explore the entire tree and capture all the characters
+   * encoding - key: character, value: [huffmanEncoding, [circleNodesNumber], [pathNodesNumber], leafNodeNumber]
    */
   generateEncoding() {
     // Check if the root is the only element in the tree
     if (this.root.getCharacter() !== null) {
       const encoding = {};
-      encoding[this.root.getCharacter()] = '0';
+      encoding[this.root.getCharacter()] = ['0', [], [], 0];
       this.encoding = encoding;
       return encoding;
     }
 
     // Create a queue that holds the tree node and the current string to that node;
     // create a encoding that holds all the encodings: key - character ; value - string to character
-    let queue = [[this.root, '']],
+    let queue = [[this.root, '', [0], []]],
       encoding = {};
+    
+    let pathCounter = 0,
+      nodeCounter = 1,
+      leafCounter = 0;
     
     while (queue.length > 0) {
       const newQueue = [];
 
       // Iterate through the queue
-      for (const [node, stringPath] of queue) {
+      for (const [node, stringPath, nodePath, branchPath] of queue) {
 
         // If the current node has a character, then it's a leaf node
         if (node.getCharacter() !== null) {
-          encoding[node.getCharacter()] = stringPath;
+          encoding[node.getCharacter()] = {
+            "stringPath" : stringPath, 
+            "nodePath" : nodePath.slice(0,-1), // Remove the last node from the list, because it's the leaf node 
+            "branchPath" : branchPath, 
+            "leafNumber" : leafCounter++
+          };
           continue;
         }
 
         // Check if there is a left child; if so, then append a '0' to the current path
         if (node.getLeftChild() !== null) {
-          newQueue.push([node.getLeftChild(), stringPath + '0']);
+          newQueue.push([node.getLeftChild(), stringPath + '0', nodePath.concat([nodeCounter++]), branchPath.concat([pathCounter++])]);
         }
 
         // Check if there is a right child; if so, then append a '1' to the current path
         if (node.getRightChild() !== null) {
-          newQueue.push([node.getRightChild(), stringPath + '1']);
+          newQueue.push([node.getRightChild(), stringPath + '1', nodePath.concat([nodeCounter++]), branchPath.concat([pathCounter++])]);
         }
       }
 

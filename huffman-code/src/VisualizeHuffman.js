@@ -128,6 +128,7 @@ function visualizeHuffman(data) {
   
   circleNodes.append('circle')
     .classed('node', true)
+    .attr('id', (_,i) => `circle-node-${i}`)
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
     .attr('r', 1e-6)
