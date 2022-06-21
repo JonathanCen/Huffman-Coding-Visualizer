@@ -136,6 +136,7 @@ function visualizeHuffman(data) {
     .attr('stroke', 'darkgray')
     .attr('stroke-width', 1e-6);
 
+/*
   // Add tooltips to the leaf nodes of the tree
   const tooltip = svgG
     .append("div")
@@ -157,7 +158,7 @@ function visualizeHuffman(data) {
       .duration(150)
       .style("opacity", 0);
   })
-  
+*/
   // Draw a rectangle for leaf nodes
   const rectangleNodes = svgG.selectAll('rect.node')
     .data(root.descendants().filter(node => node.data.name !== null)).enter();
@@ -171,7 +172,9 @@ function visualizeHuffman(data) {
     .attr('width', 1e-6)
     .attr('height', 1e-6)
     .attr('fill', '#edf4fb')
-    .attr('stroke', 'darkgray')
+    .attr('stroke', 'darkgray');
+
+/*
     .on('mouseover',  (e, d) => {
       const idNum = e.target.id.split("-")[2];
       svgG.select(`#rect-node-${idNum}`)
@@ -203,7 +206,7 @@ function visualizeHuffman(data) {
       .attr("x", (d) => d.x + 5)
       .attr("y", (d) => d.y + 10);
   })
-
+*/
   
   // Add the text to the nodes of the tree
   const nodeText = svgG.selectAll('node-text.label')
@@ -217,7 +220,8 @@ function visualizeHuffman(data) {
     .attr('y', (d) => d.y+5) // Change the position of the text in the nodes
     .attr('text-anchor', 'middle')
     .text((d) => (d.data.name === null ? d.data.count === 0 ? `'NYT'` : d.data.count : `'${d.data.name}' | ${d.data.count}`))
-    .style("fill-opacity", 1e-6)
+    .style("fill-opacity", 1e-6);
+/*
     .on('mouseover',  (e, d) => {
       const idNum = e.target.id.split("-")[2];
       svgG.select(`#rect-node-${idNum}`)
@@ -237,7 +241,7 @@ function visualizeHuffman(data) {
         .attr("x", (d) => d.x + 5)
         .attr("y", (d) => d.y + 10);
   })
-
+*/
   // Adding transition for nodes
   const nodeTransition = transition()
     .duration(duration)

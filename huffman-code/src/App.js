@@ -2,15 +2,18 @@ import React, { useContext } from "react";
 import { Stack, Typography, Grid } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
+import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
+
 import EncodeText from "./EncodeText";
+import InputText from "./InputText";
 import BinaryCode from "./BinaryCode";
 import HuffmanCoding from "./HuffmanCoding";
-import "./App.css";
-
 import HuffmanCodeTree from "./HuffmanCodeTree";
 import Item from "./Item";
 
-import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
+
+import "./App.css";
+
 
 function App() {
   const { huffmanVariation } = useContext(HuffmanCodeVariationContext);
@@ -40,21 +43,14 @@ function App() {
             margin: "7px",
           }}
         >
-          <Item>
-            <EncodeText />
-          </Item>
-          <Item>
-            <BinaryCode codingName="Binary Coding" />
-          </Item>
-          <Item>
-            <HuffmanCoding codingName={huffmanVariation} />
-          </Item>
+          <Item> <EncodeText /> </Item>
+          <Item> <InputText /> </Item>
+          <Item> <BinaryCode codingName="Binary Coding" /> </Item>
+          <Item> <HuffmanCoding codingName={huffmanVariation} /> </Item>
         </Stack>
       </Grid>
       <Grid item xs={7}>
-        <Item rightPadding="10px" id="huffman-code-tree" height="100%">
-          <HuffmanCodeTree />
-        </Item>
+        <Item rightPadding="10px" id="huffman-code-tree" height="100%"> <HuffmanCodeTree /> </Item>
       </Grid>
       <Grid item xs={12}>
         <Stack

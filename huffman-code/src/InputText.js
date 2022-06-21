@@ -4,37 +4,37 @@ import { EncodeTextContext } from "./EncodeTextContext";
 import { mouseEnter, mouseLeave } from "./CodingMouseEvents";
 import "./Coding.css";
 
-function HuffmanCoding(props) {
-  const { huffmanCoding } = useContext(EncodeTextContext);
+function InputText() {
 
-  const metaInfo = `(Total bits: 0)`;
+  const { text } = useContext(EncodeTextContext);
 
   return (
-    <div>
+    <React.Fragment>
       <Typography
         variant="body2"
         sx={{
           color: "rgba(0, 0, 0, 0.6)",
         }}
       >
-        {props.codingName}: &nbsp; {metaInfo}
+        Input Text: &nbsp; (Character count: {text.length})
       </Typography>
-      <div disabled className="coding-div">
-        {huffmanCoding.map((charCode, index) => {
+      <div className="coding-div">
+        {text.map((char, index) => {
           return (
             <span
               className={"coding-span"}
               onMouseEnter={(e) => mouseEnter(e)}
               onMouseLeave={(e) => mouseLeave(e)}
-              id={`huffman-coding-${index}`}
+              id={`text-coding-${index}`}
               key={index}
             >
-              {charCode}{" "}
+              &nbsp; '{char === ' ' ? 'Space' : char}' &nbsp;
             </span>
           );
         })}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
-export default HuffmanCoding;
+
+export default InputText;

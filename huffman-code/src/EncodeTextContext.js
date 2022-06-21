@@ -57,14 +57,6 @@ const EncodeTextProvider = ({ children }) => {
     return _ => {window.removeEventListener("resize", handleResize);}
   }, [huffmanTreeJSON]);
 
-  // useLayoutEffect(() => {
-  //   const rerenderHuffman = () => {
-  //     visualizeHuffman(huffmanTreeJSON);
-  //   }
-  //   window.addEventListener('resize', rerenderHuffman);
-  //   return () => window.removeEventListener("resize", rerenderHuffman);
-  // }, [])
-
   return (
     <EncodeTextContext.Provider
       value={{

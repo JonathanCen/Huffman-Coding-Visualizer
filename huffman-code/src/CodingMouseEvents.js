@@ -6,6 +6,9 @@ const mouseEnter = (e) => {
   document
     .getElementById(`huffman-coding-${id}`)
     .classList.add("coding-span-hover");
+  document
+    .getElementById(`text-coding-${id}`)
+    .classList.add("coding-span-hover");
 };
 
 const mouseLeave = (e) => {
@@ -15,6 +18,9 @@ const mouseLeave = (e) => {
     .classList.remove("coding-span-hover");
   document
     .getElementById(`huffman-coding-${id}`)
+    .classList.remove("coding-span-hover");
+  document
+    .getElementById(`text-coding-${id}`)
     .classList.remove("coding-span-hover");
 };
 
