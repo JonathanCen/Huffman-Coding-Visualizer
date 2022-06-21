@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext, useLayoutEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
 import visualizeHuffman from "./VisualizeHuffman";
 import { select } from 'd3';
@@ -30,7 +30,7 @@ const EncodeTextProvider = ({ children }) => {
 
       // Visualize it
       const huffmanJSON = huffmanTree.jsonify();
-      setHuffmanTreeJSON(JSON.parse(JSON.stringify(huffmanJSON)));
+      setHuffmanTreeJSON(huffmanJSON);
       visualizeHuffman(huffmanJSON);
     } else {
       // Then the text is empty so reset all the state and svg
@@ -41,13 +41,19 @@ const EncodeTextProvider = ({ children }) => {
     }
   }, [text, huffmanVariation]);
 
+  // Rerenders the tree whenever the screen resizes
   useEffect(() => {
+    // Handler function for rerendering
     const handleResize = () => {
       if (Object.entries(huffmanTreeJSON).length > 0) {
         visualizeHuffman(huffmanTreeJSON);
       }
     };
+    
+    // Add an event handler on the window
     window.addEventListener("resize", handleResize);
+    
+    // Removes the handler once we exit
     return _ => {window.removeEventListener("resize", handleResize);}
   }, [huffmanTreeJSON]);
 

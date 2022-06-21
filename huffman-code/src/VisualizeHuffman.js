@@ -1,10 +1,11 @@
-import { select, tree, hierarchy, zoom, zoomIdentity } from "d3";
+import { select, transition, tree, hierarchy, zoom, easeCircle, easeBounce } from "d3";
 
 function zoomFit(root, isOnlyRoot) {
-
+  // Get the tree bounds and svg element
   const bounds = root.node().getBBox(),
     svgElement = root.node().parentElement.parentElement;
 
+  // Get the svg container dimensions/tree dimensions
   const svgContainerWidth = svgElement.width.baseVal.value,
     svgContainerHeight = svgElement.height.baseVal.value,
     treeWidth = bounds.width,
@@ -12,17 +13,18 @@ function zoomFit(root, isOnlyRoot) {
     midX = bounds.x + treeWidth / 2,
     midY = bounds.y + treeHeight / 2;
   
-  const scale = (isOnlyRoot ? .4 : 0.9) / Math.max(treeWidth / svgContainerWidth, treeHeight / svgContainerHeight);
+  // Compute the scale and translate needed to center the tree
+  const scale = (isOnlyRoot ? .4 : 0.85) / Math.max(treeWidth / svgContainerWidth, treeHeight / svgContainerHeight);
   const translate = [svgContainerWidth / 2 - scale * midX, svgContainerHeight / 2 - scale * midY];
 
+  // Apply the scale and translate to the tree
   root.attr("transform", `translate(${translate}) scale(${scale})`);
 }
 
 function visualizeHuffman(data) {
   // Get the svg element and the height/width of it 
   const svg = select('svg');
-  const svgHeight = svg.node().getBoundingClientRect().height,
-    svgWidth = svg.node().getBoundingClientRect().width;
+  const svgWidth = svg.node().getBoundingClientRect().width;
   
   // Clear the current svg content
   svg.selectAll('*').remove();
@@ -40,7 +42,7 @@ function visualizeHuffman(data) {
       zoomG.attr('transform', e.transform);
     }));
 
-  // Node dimensions
+  // Node dimensions & spacing among nodes
   const rectLeafDim = { width: 50, height: 30 },
     nonLeafNodes = { radius : 20 };
 
@@ -53,132 +55,134 @@ function visualizeHuffman(data) {
     rectLeafDim.height + verticalSeparation,
   ]).separation((a, b) => a.parent === b.parent ? 1 : 1.5);
 
-  // Get the root of the data
+  // Get the root/links/nodes of the data
   const root = hierarchy(data);  
-  // const linkPathGenerator = linkVertical()
-  //   .x((d) => d.x)
-  //   .y((d) => d.y);
   const links = treeLayout(root).links();
-
   const nodes = root.descendants().reverse();
+
+  // Normalize the depth
   nodes.forEach((d) => {d.y = d.depth * 180;})
 
   /*
-  const links = treeLayout(root).links();
-  const linkPathGenerator = linkVertical()
-    .x(d => d.x)
-    .y(d => d.y);
-  
-  svgG.selectAll('path')
-    .data(links).enter()
-    .append('path')
-      .attr('d', linkPathGenerator)
-
-  svgG
-    .selectAll('text')
-    .data(root.descendants())
-    .enter()
-    .append('text')
-    .attr('x', (d) => d.x)
-    .attr('y', (d) => d.y)
-    .attr('text-anchor', 'middle')
-    .text((d) => (d.data.name === null ? '' : `'${d.data.name}'`));
-  */
-  /*
    * 1) Add nodes to the tree (Done)
-   * 2) Add the more data to the tree (fix the nodes)
+   * 2) Add the more data to the tree (fix the nodes) (Done)
    * 3) Add labels to the paths (Done)
-   * 4) Fix the coloring scheme
+   * 4) Fix the coloring scheme 
    * 5) Add transitions 
-   * 6) Make it responsive 
+   * 6) Make it responsive (Done)
    */
-
-  const assignPathText = (d) => {
-    return d.source.data.children[0] === d.target.data ? '0' : '1';
-  }
 
   treeLayout(root);
 
-  // svgG.selectAll('path')
-  // .data(links).enter()
-  // .append('path')
-  //   .attr('id', (d, i) => `path-${i}`)
-  //   .attr('d', linkPathGenerator)
+  // Draw the branches/lines of the tree
+  const branches = svgG.selectAll('line')
+    .data(links).enter();
 
-  //   svgG.selectAll('path-text.label')
-  // .data(links).enter()
-  //   .append('text')
-  //     .attr('id', 'path-text')
-  //     .attr('dy', (d, i) => i%2 === 0 ? 12 : -1)
-  //   .append('textPath')
-  //     .attr('startOffset', '50%')
-  //     .attr('text-anchor', 'middle')
-  //     .attr('xlink:href', (d, i) => `#path-${i}`)
-  //     .text((d) => assignPathText(d));
-  
+  branches.append('line')
+        .attr('id', (d, i) => `line-${i}`)
+        .attr('x1', (d) => d.source.x)
+        .attr('y1', (d) => d.source.y)
+        .attr('x2', (d) => d.target.x)
+        .attr('y2', (d) => d.target.y)
+        .attr('stroke', 'darkgray')
+        .attr('stroke-width', 1e-6);
+
+  // Computes the mid point for the x and y axis of the line text
   const computeMidpoint = (d, i, x=true) => {
     return x ? (i%2 === 0 ? ((d.source.x + d.target.x)/2)-10 : (d.source.x + d.target.x)/2) : (d.source.y + d.target.y)/2
   }
 
-  svgG.selectAll('line')
-    .data(links).enter()
-    .append('line')
-      .attr('id', (d, i) => `line-${i}`)
-      .attr('x1', (d) => d.source.x)
-      .attr('y1', (d) => d.source.y)
-      .attr('x2', (d) => d.target.x)
-      .attr('y2', (d) => d.target.y)
-      .attr('stroke', 'darkgray')
-      .attr('stroke-width', 2);
+  // Assigns the text for the branches (left = 0; right = 1)
+  const assignPathText = (d) => {
+    return d.source.data.children[0] === d.target.data ? "0" : "1";
+  };
 
-  svgG.selectAll('path-text.label')
-  .data(links).enter()
-    .append('text')
-      .classed('path-text', true)
-      .attr('x', (d, i) =>  computeMidpoint(d, i))
-      .attr('y', (d, i) => computeMidpoint(d, i, false))
-      .text((d) => assignPathText(d));
+  // Add text on the branches
+  const branchText = svgG.selectAll('path-text.label')
+    .data(links).enter();
+  
+  branchText.append('text')
+        .classed('path-text', true)
+        .attr('x', (d, i) =>  computeMidpoint(d, i))
+        .attr('y', (d, i) => computeMidpoint(d, i, false))
+        .text((d) => assignPathText(d))
+        .attr("fill-opacity", 1e-6);
+
+  // Add transition for branches
+  const duration = 750;
+  const branchTransition = transition()
+    .duration(duration)
+    .ease(easeBounce);
+
+  branches.selectAll("line")
+    .transition(branchTransition)
+    .attr('stroke-width', 2);
+  
+  branchText.selectAll("text")
+    .transition(branchTransition)
+    .attr("fill-opacity", 1);
 
   // Draw circle nodes for non-leaf values
-  svgG.selectAll('circle.node')
-  .data(root.descendants().filter(node => node.data.name === null)).enter()
-    .append('circle')
+  const circleNodes = svgG.selectAll('circle.node')
+    .data(root.descendants().filter(node => node.data.name === null)).enter()
+  
+  circleNodes.append('circle')
     .classed('node', true)
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
-    .attr('r', nonLeafNodes.radius)
+    .attr('r', 1e-6)
+    // .attr('r', nonLeafNodes.radius)
     .attr('fill', 'lightblue')
     .attr('stroke', 'darkgray')
-    .attr('stroke-width', 1);
-
-  svgG.selectAll('rect.node')
-    .data(root.descendants().filter(node => node.data.name !== null)).enter()
-      .append('rect')
-      .attr('x', (d) => d.x - (rectLeafDim.width/2))
-      .attr('y', (d) => d.y - (rectLeafDim.height/2))
-      .attr('rx', 4)
-      .attr('width', rectLeafDim.width)
-      .attr('height', rectLeafDim.height)
-      .attr('fill', '#edf4fb')
-      .attr('stroke', 'darkgray');
-
-  svgG.selectAll('node-text.label')
-    .data(root.descendants()).enter()
-      .append('text').classed('label', true)
-      .style('fill', 'gray')
-      .attr('x', (d) => d.x)
-      .attr('y', (d) => d.y+5) // Change the position of the text in the nodes
-      .attr('text-anchor', 'middle')
-      .text((d) => (d.data.name === null ? d.data.count === 0 ? `'NYT'` : d.data.count : `'${d.data.name}' | ${d.data.count}`));
+    .attr('stroke-width', 1e-6);
+  
+  // Draw a rectangle for leaf nodes
+  const rectangleNodes = svgG.selectAll('rect.node')
+    .data(root.descendants().filter(node => node.data.name !== null)).enter();
+  
+  rectangleNodes.append('rect')
+    .classed('node', true)
+    .attr('x', (d) => d.x - (rectLeafDim.width/2))
+    .attr('y', (d) => d.y - (rectLeafDim.height/2))
+    .attr('rx', 4)
+    .attr('width', 1e-6)
+    .attr('height', 1e-6)
+    .attr('fill', '#edf4fb')
+    .attr('stroke', 'darkgray');
 
   
-  // svg.select('g.path')
-  //   .selectAll('path')
-  //   .data(root.links()).enter()
-  //   .append('path')
-  //     .attr('d', linkPathGenerator)
-  //     .classed('link', true)
+  // Add the text to the nodes of the tree
+  const nodeText = svgG.selectAll('node-text.label')
+    .data(root.descendants()).enter();
+  
+  nodeText.append('text').classed('label', true)
+    .style('fill', 'gray')
+    .attr('x', (d) => d.x)
+    .attr('y', (d) => d.y+5) // Change the position of the text in the nodes
+    .attr('text-anchor', 'middle')
+    .text((d) => (d.data.name === null ? d.data.count === 0 ? `'NYT'` : d.data.count : `'${d.data.name}' | ${d.data.count}`))
+    .style("fill-opacity", 1e-6);
 
+  // Adding transition for nodes
+  const nodeTransition = transition()
+    .duration(duration)
+    .ease(easeCircle);
+
+  circleNodes.selectAll("circle")
+    .transition(nodeTransition)
+    .attr("r", nonLeafNodes.radius)
+    .attr("stroke-width", 1);
+
+  rectangleNodes.selectAll("rect")
+    .transition(nodeTransition)
+    .attr('width', rectLeafDim.width)
+    .attr('height', rectLeafDim.height);
+
+  nodeText.selectAll("text")
+    .transition(nodeTransition)
+    .style("fill-opacity", 1);
+
+  // Realign the zoom of the svg allowing the entire tree to be seen
   zoomFit(svgG, data.name !== null);
     
 }
