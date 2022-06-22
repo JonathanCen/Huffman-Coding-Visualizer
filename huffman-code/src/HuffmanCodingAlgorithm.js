@@ -100,11 +100,9 @@ class HuffmanBinaryTree {
   constructFrequencyObject() {
     return this.inputText.reduce(
       (currentObject, character) => (
-        (currentObject[character] = currentObject.hasOwnProperty(character)
-          ? currentObject[character] + 1
-          : 1),
-        currentObject
-      ),
+        (currentObject[character] = 
+          currentObject.hasOwnProperty(character) ? currentObject[character] + 1 : 1),
+        currentObject), 
       {}
     );
   }
@@ -421,7 +419,12 @@ class HuffmanBinaryTree {
     // Check if the root is the only element in the tree
     if (this.root.getCharacter() !== null) {
       const encoding = {};
-      encoding[this.root.getCharacter()] = ['0', [], [], 0];
+      encoding[this.root.getCharacter()] = {
+        "stringPath" : '0',
+        "nodePath" : [],
+        "branchPath" : [],
+        "leafNumber" : 0
+      };
       this.encoding = encoding;
       return encoding;
     }
@@ -445,7 +448,7 @@ class HuffmanBinaryTree {
         if (node.getCharacter() !== null) {
           encoding[node.getCharacter()] = {
             "stringPath" : stringPath, 
-            "nodePath" : nodePath.slice(0,-1), // Remove the last node from the list, because it's the leaf node 
+            "nodePath" : nodePath, // Remove the last node from the list, because it's the leaf node 
             "branchPath" : branchPath, 
             "leafNumber" : leafCounter++
           };
@@ -454,12 +457,20 @@ class HuffmanBinaryTree {
 
         // Check if there is a left child; if so, then append a '0' to the current path
         if (node.getLeftChild() !== null) {
-          newQueue.push([node.getLeftChild(), stringPath + '0', nodePath.concat([nodeCounter++]), branchPath.concat([pathCounter++])]);
+          if (node.getLeftChild().getCharacter() !== null) {
+            newQueue.push([node.getLeftChild(), stringPath + '0', nodePath, branchPath.concat([pathCounter++])]); 
+          } else {
+            newQueue.push([node.getLeftChild(), stringPath + '0', nodePath.concat([nodeCounter++]), branchPath.concat([pathCounter++])]); 
+          }
         }
 
         // Check if there is a right child; if so, then append a '1' to the current path
         if (node.getRightChild() !== null) {
-          newQueue.push([node.getRightChild(), stringPath + '1', nodePath.concat([nodeCounter++]), branchPath.concat([pathCounter++])]);
+          if (node.getRightChild().getCharacter() !== null) {
+            newQueue.push([node.getRightChild(), stringPath + '1', nodePath, branchPath.concat([pathCounter++])]); 
+          } else {
+            newQueue.push([node.getRightChild(), stringPath + '1', nodePath.concat([nodeCounter++]), branchPath.concat([pathCounter++])]); 
+          }
         }
       }
 
