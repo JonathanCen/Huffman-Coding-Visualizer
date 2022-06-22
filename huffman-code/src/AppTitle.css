@@ -1,0 +1,9 @@
+#app-title {
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+#app-title-anchor {
+  color: inherit;
+  text-decoration: none;
+}

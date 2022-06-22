@@ -1,0 +1,19 @@
+#contact-info {
+  width: 500px;
+  margin: 0 auto;
+  padding-top: 60px;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+#github-link,
+#personal-page-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+#personal-page-link,
+#github-link {
+  font-size: 12px;
+}

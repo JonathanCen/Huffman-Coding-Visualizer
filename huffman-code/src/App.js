@@ -1,22 +1,14 @@
-import React, { useContext } from "react";
-import { Stack, Typography, Grid } from "@mui/material";
-import GitHubIcon from "@mui/icons-material/GitHub";
+import React from "react";
+import {  Grid } from "@mui/material";
 
-import { HuffmanCodeVariationContext } from "./HuffmanCodeVariationContext";
-
-import EncodeText from "./EncodeText";
-import InputText from "./InputText";
-import BinaryCode from "./BinaryCode";
-import HuffmanCoding from "./HuffmanCoding";
-import HuffmanCodeTree from "./HuffmanCodeTree";
 import Item from "./Item";
-
-
-import "./App.css";
-
+import AppTitle from "./AppTitle";
+import TextBoxes from "./TextBoxes";
+import HuffmanCodeTree from "./HuffmanCodeTree";
+import ContactInfo from "./ContactInfo";
 
 function App() {
-  const { huffmanVariation } = useContext(HuffmanCodeVariationContext);
+
 
   return (
     <Grid
@@ -28,48 +20,15 @@ function App() {
         padding: "5px",
       }}
     >
-      <Grid item xs={12}>
-        <Typography id="app-title" variant="h4" component="h4">
-          <a id="app-title-anchor" href="http://localhost:3000/">
-            Huffman Code Visualizer
-          </a>
-        </Typography>
-      </Grid>
-      <Grid item xs={5}>
-        <Stack
-          direction="column"
-          spacing={2}
-          sx={{
-            margin: "7px",
-          }}
-        >
-          <Item> <EncodeText /> </Item>
-          <Item> <InputText /> </Item>
-          <Item> <BinaryCode codingName="Binary Coding" /> </Item>
-          <Item> <HuffmanCoding codingName={huffmanVariation} /> </Item>
-        </Stack>
-      </Grid>
+      {/* Top: App Title */}
+      <Grid item xs={12}><AppTitle/></Grid>
+      {/* Middle: Textboxes (on the left) and HuffmanTree Visualizer (on the right) */}
+      <Grid item xs={5}><TextBoxes/></Grid>
       <Grid item xs={7}>
         <Item rightPadding="10px" id="huffman-code-tree" height="100%"> <HuffmanCodeTree /> </Item>
       </Grid>
-      <Grid item xs={12}>
-        <Stack
-          direction="row"
-          justifyContent="space-evenly"
-          alignItems="center"
-        >
-          <Typography variant="subtitle1">
-            <a id="github-link" href="https://github.com/">
-              Source Code <GitHubIcon fontSize="small" />
-            </a>
-          </Typography>
-          <Typography variant="overline">
-            <a id="personal-page-link" href="https://google.com/">
-              Jonathan Cen
-            </a>
-          </Typography>
-        </Stack>
-      </Grid>
+      {/* Bottom: Source Code / Contact Info */}
+      <Grid item xs={12}><ContactInfo/></Grid>
     </Grid>
   );
 }

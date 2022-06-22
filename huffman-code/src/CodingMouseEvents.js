@@ -1,4 +1,4 @@
-import { select} from 'd3';
+import { select} from "d3";
 
 const mouseEnterAnimatePath = (character, huffmanTreePaths) => {
   // Extract the node paths, branch paths, and leaf number
@@ -6,8 +6,8 @@ const mouseEnterAnimatePath = (character, huffmanTreePaths) => {
     branchPathNodes = huffmanTreePaths[character]["branchPath"],
     leafNumber = huffmanTreePaths[character]["leafNumber"];
 
-  // Select nodes, branch, leaves and animate along the path to the leaf
-  const svgG = select('svg>g>g');
+  // Select nodes, branch, leaf to the character"s leaf
+  const svgG = select("svg>g>g");
 
   const circleNodes = svgG
       .selectAll("circle.node")
@@ -40,11 +40,14 @@ const mouseEnterAnimatePath = (character, huffmanTreePaths) => {
     .transition()
     .duration(750)
     .delay((400 * maxPathDepth) + 50)
-    .attr('fill', 'rgb(255, 233, 243)');
+    .attr("fill", "rgb(255, 233, 243)");
 }
 
 const mouseEnter = (e, huffmanTreePaths) => {
+  // Get the id of the element that is hovered over
   const id = e.target.id.split("-")[2];
+
+  // Add a class to the elements
   document
     .getElementById(`ascii-coding-${id}`)
     .classList.add("coding-span-hover");
@@ -54,8 +57,12 @@ const mouseEnter = (e, huffmanTreePaths) => {
   document
     .getElementById(`text-coding-${id}`)
     .classList.add("coding-span-hover");
+  
+  // Extract which character the mouse is over
   const character = document.getElementById(`text-coding-${id}`).innerText.trim().split(`'`)[1];
-  mouseEnterAnimatePath(character === 'Space' ? ' ' : character, huffmanTreePaths);
+  
+  // Animate a path to the character leaf
+  mouseEnterAnimatePath(character === "Space" ? " " : character, huffmanTreePaths);
 };
 
 
@@ -64,7 +71,8 @@ const mouseLeaveAnimatePath = (character, huffmanTreePaths) => {
   const characterPathNodes = huffmanTreePaths[character]["nodePath"],
     branchPathNodes = huffmanTreePaths[character]["branchPath"],
     leafNumber = huffmanTreePaths[character]["leafNumber"];
-
+  
+  // Select nodes, branch, leaf to the character"s leaf
   const svgG = select("svg>g>g");
 
   const circleNodes = svgG.selectAll("circle.node")
@@ -77,6 +85,7 @@ const mouseLeaveAnimatePath = (character, huffmanTreePaths) => {
 
   const maxCircleDepth = circleNodes.nodes().length,
     maxPathDepth = pathBranches.nodes().length;
+
   // Select the nodes, branch, and leaf and deanimate the path
   circleNodes
     .transition()
@@ -99,7 +108,10 @@ const mouseLeaveAnimatePath = (character, huffmanTreePaths) => {
 }
 
 const mouseLeave = (e, huffmanTreePaths) => {
+  // Get the id of the element that is hovered over
   const id = e.target.id.split("-")[2];
+
+  // Remove a class to the elements
   document
     .getElementById(`ascii-coding-${id}`)
     .classList.remove("coding-span-hover");
@@ -109,8 +121,12 @@ const mouseLeave = (e, huffmanTreePaths) => {
   document
     .getElementById(`text-coding-${id}`)
     .classList.remove("coding-span-hover");
+  
+  // Extract which character the mouse is leaving
   const character = document.getElementById(`text-coding-${id}`).innerText.trim().split(`'`)[1];
-  mouseLeaveAnimatePath(character === 'Space' ? ' ' : character, huffmanTreePaths);
+
+  // Animate a path from the character leaf to the root
+  mouseLeaveAnimatePath(character === "Space" ? " " : character, huffmanTreePaths);
 };
 
 export { mouseEnter, mouseLeave };
