@@ -1,17 +1,16 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Typography } from "@mui/material";
 import { EncodeTextContext } from "./EncodeTextContext";
 import { mouseEnter, mouseLeave } from "./CodingMouseEvents";
 import "./Coding.css";
 
-function BinaryCode(props) {
-  const { binaryCode, huffmanTreePaths } = useContext(EncodeTextContext);
+function HuffmanCoding(props) {
+  const { huffmanCoding, huffmanTreePaths } = useContext(EncodeTextContext);
 
-  useEffect(() => {
-    // console.log(`Encoding ASCII Coding: ${binaryCode}`);
-  }, [binaryCode]);
-
-  const metaInfo = `(Total bits: ${binaryCode.length * 8})`;
+  const metaInfo = `(Total bits: ${huffmanCoding.reduce(
+    (totalBits, characterEncoding) => totalBits + characterEncoding.length,
+    0
+  )})`;
 
   return (
     <div>
@@ -24,13 +23,13 @@ function BinaryCode(props) {
         {props.codingName}: &nbsp; {metaInfo}
       </Typography>
       <div disabled className="coding-div">
-        {binaryCode.map((charCode, index) => {
+        {huffmanCoding.map((charCode, index) => {
           return (
             <span
               className={"coding-span"}
               onMouseEnter={(e) => mouseEnter(e, huffmanTreePaths)}
               onMouseLeave={(e) => mouseLeave(e, huffmanTreePaths)}
-              id={`ascii-coding-${index}`}
+              id={`huffman-coding-${index}`}
               key={index}
             >
               {charCode}{" "}
@@ -41,4 +40,4 @@ function BinaryCode(props) {
     </div>
   );
 }
-export default BinaryCode;
+export default HuffmanCoding;
