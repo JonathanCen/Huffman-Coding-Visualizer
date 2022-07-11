@@ -1,5 +1,5 @@
 {
-  "name": "Huffman-Code",
+  "name": "huffman-coding-visualizer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
