@@ -49,4 +49,4 @@ Feel free to check the [issues page](https://github.com/JonathanCen/Huffman-Codi
 ## License
 
 Copyright © 2019 [Jonathan Cen](<ADD PERSONAL WEBSITE LINK>).\
-This project is [MIT licensed](https://github.com/JonathanCen/Huffman-Coding-Visualizer/blob/main/License).
+This project is [MIT licensed](https://github.com/JonathanCen/Huffman-Coding-Visualizer/blob/main/LICENSE).
