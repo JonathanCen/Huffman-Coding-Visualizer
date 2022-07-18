@@ -8,12 +8,15 @@ function ContactInfo() {
   return (
     <Stack direction="row" justifyContent="space-evenly" alignItems="center">
       <Typography variant="subtitle1">
-        <a id="github-link" href="https://github.com/">
+        <a
+          id="github-link"
+          href="https://github.com/JonathanCen/Huffman-Coding-Visualizer"
+        >
           Source Code <GitHubIcon fontSize="small" />
         </a>
       </Typography>
       <Typography variant="overline">
-        <a id="personal-page-link" href="https://google.com/">
+        <a id="personal-page-link" href="https://jonathancen.tech/">
           Jonathan Cen
         </a>
       </Typography>
