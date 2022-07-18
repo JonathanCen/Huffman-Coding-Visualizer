@@ -15,19 +15,19 @@ To run this application locally on your computer, you'll need `Git` and `Node.js
 
 Then run the following command in the command line and go to the desired directory to store this project:
 
-Clone this repository
+Clone this repository:
 
     git clone https://github.com/JonathanCen/Huffman-Coding-Visualizer.git
 
-Go into the repository
+Go into the repository:
 
     cd Huffman-Coding-Visualizer
 
-Install all dependicies
+Install all dependencies:
 
     npm install
 
-Run the app
+Run the app:
 
     npm start
 
