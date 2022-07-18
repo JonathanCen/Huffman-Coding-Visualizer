@@ -16,7 +16,7 @@ function ContactInfo() {
         </a>
       </Typography>
       <Typography variant="overline">
-        <a id="personal-page-link" href="https://jonathancen.tech/">
+        <a id="personal-page-link" href="https://jonathancen.me/">
           Jonathan Cen
         </a>
       </Typography>
