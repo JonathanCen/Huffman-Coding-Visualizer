@@ -1,6 +1,6 @@
 # Huffman Coding Visualizer 📄
 
-Huffman Coding Visualizer is an interactive web application that uses the input from the user to build and visualize a Huffman tree. The Huffman tree can be built with either the regular [Huffman Coding algorithm](https://en.wikipedia.org/wiki/Huffman_coding) or [Adaptive Huffman Coding algorithm](https://en.wikipedia.org/wiki/Adaptive_Huffman_coding). Additionally, the application shows the binary and encoded binary of the input symbols, displays the amount of memory saved (in bits) with the coding, and visualizes paths from the root of the tree to the character leaves when hovering over characters, bits, or encoded symbols! Test it out: [Live Demo](https://jonathancen.github.io/Huffman-Coding-Visualizer/).
+Huffman Coding Visualizer is an interactive web application that uses the input from the user to build and visualize a Huffman tree. The Huffman tree can be built with either the regular [Huffman Coding algorithm](https://en.wikipedia.org/wiki/Huffman_coding) or [Adaptive Huffman Coding algorithm](https://en.wikipedia.org/wiki/Adaptive_Huffman_coding). Additionally, the application shows the binary and encoded binary of the input symbols, displays the amount of memory saved (in bits) with the coding, and visualizes paths from the root of the tree to the character leaves when hovering over characters, bits, or encoded symbols! Test it out: [Live Demo](https://huffman-coding-visualizer-pbxfa.ondigitalocean.app/).
 
 ## Getting Started
 
