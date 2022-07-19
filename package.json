@@ -15,6 +15,7 @@
     "d3": "^7.4.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -45,7 +46,6 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "5.0.1",
     "gh-pages": "^4.0.0"
   }
 }
